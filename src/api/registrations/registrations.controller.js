@@ -110,4 +110,48 @@ const updateRegistration = async options => {
   }
 };
 
-module.exports = { getRegistrations, getRegistration, updateRegistration };
+const resetRegistrations = async options => {
+  logEmitter.emit(
+    "functionCall",
+    "registrations.controller",
+    "resetRegistrations"
+  );
+
+  const validationResult = validateOptions(options);
+
+  if (validationResult === true) {
+    if (options.double_mode) {
+      return registrationDbDouble(options.double_mode);
+    }
+
+    const registrations = await getAllRegistrations(options.council, false, []);
+
+    const updatePromises = [];
+
+    registrations.forEach(registration => {
+      updatePromises.push(
+        updateRegistrationCollected(
+          registration.fsa_rn,
+          false,
+          registration.council
+        )
+      );
+    });
+
+    const response = await Promise.all(updatePromises);
+
+    return response;
+  } else {
+    const error = new Error("");
+    error.name = "optionsValidationError";
+    error.rawError = validationResult;
+    throw error;
+  }
+};
+
+module.exports = {
+  getRegistrations,
+  getRegistration,
+  updateRegistration,
+  resetRegistrations
+};

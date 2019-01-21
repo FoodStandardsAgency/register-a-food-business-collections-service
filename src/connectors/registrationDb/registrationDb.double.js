@@ -86,6 +86,8 @@ const doubleResponse = [
 
 const updateResponse = { fsa_rn: "1234", collected: true };
 
+const resetResponse = [{ fsa_rn: "1234", collected: false }];
+
 const registrationDbDouble = double_mode => {
   if (double_mode === "success") {
     return doubleResponse;
@@ -93,6 +95,8 @@ const registrationDbDouble = double_mode => {
     throw new Error("Registration DB double, double mode is set to 'fail'");
   } else if (double_mode === "update") {
     return updateResponse;
+  } else if (double_mode === "reset") {
+    return resetResponse;
   } else if (double_mode === "single") {
     return doubleResponse[0];
   } else {

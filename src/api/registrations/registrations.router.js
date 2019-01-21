@@ -3,7 +3,8 @@ const { logEmitter } = require("../../services/logging.service");
 const {
   getRegistrations,
   getRegistration,
-  updateRegistration
+  updateRegistration,
+  resetRegistrations
 } = require("./registrations.controller");
 
 const registrationsRouter = () => {
@@ -66,6 +67,37 @@ const registrationsRouter = () => {
         "functionFail",
         "registrations.router",
         "GET /:lc/:fsa_rn route",
+        err
+      );
+      next(err);
+    }
+  });
+
+  router.put("/reset/:lc", async (req, res, next) => {
+    logEmitter.emit(
+      "functionCall",
+      "registrations.router",
+      "PUT /reset/:lc/ route"
+    );
+    try {
+      const options = {
+        double_mode: req.headers["double-mode"] || "",
+        council: req.params.lc
+      };
+
+      const response = await resetRegistrations(options);
+
+      logEmitter.emit(
+        "functionSuccess",
+        "registrations.router",
+        "PUT /reset/:lc/ route"
+      );
+      res.send(response);
+    } catch (err) {
+      logEmitter.emit(
+        "functionFail",
+        "registrations.router",
+        "PUT /reset/:lc/ route",
         err
       );
       next(err);

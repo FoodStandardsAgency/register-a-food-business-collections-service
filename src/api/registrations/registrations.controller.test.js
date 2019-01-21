@@ -18,7 +18,8 @@ const {
 const {
   getRegistrations,
   getRegistration,
-  updateRegistration
+  updateRegistration,
+  resetRegistrations
 } = require("./registrations.controller");
 
 describe("registrations.controller", () => {
@@ -152,6 +153,67 @@ describe("registrations.controller", () => {
       });
       it("Should return the response of updateRegistrationCollected", () => {
         expect(result).toEqual({ fsa_rn: "5768", collected: true });
+      });
+    });
+  });
+
+  describe("Function: resetRegistrations", () => {
+    describe("When given invalid council option", () => {
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => false);
+        try {
+          await resetRegistrations({ council: [] });
+        } catch (err) {
+          result = err;
+        }
+      });
+
+      it("should bubble up the error", () => {
+        expect(result.name).toBe("optionsValidationError");
+      });
+    });
+
+    describe("When given double mode", () => {
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => true);
+        result = await resetRegistrations({
+          collected: true,
+          double_mode: "reset"
+        });
+      });
+      it("Should return the double response", () => {
+        expect(result[0]).toEqual({ fsa_rn: "1234", collected: false });
+      });
+    });
+    describe("When successful", () => {
+      const mockRegistrations = [
+        {
+          fsa_rn: "5768",
+          collected: true,
+          council: "cardiff"
+        },
+        {
+          fsa_rn: "5770",
+          collected: true,
+          council: "cardiff"
+        },
+        {
+          fsa_rn: "5769",
+          collected: true,
+          council: "cardiff"
+        }
+      ];
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => true);
+        getAllRegistrations.mockImplementation(() => mockRegistrations);
+        updateRegistrationCollected.mockImplementation((fsa_rn, collected) => ({
+          fsa_rn,
+          collected
+        }));
+        result = await resetRegistrations("cardiff");
+      });
+      it("Should return the multiples responses of updateRegistration", () => {
+        expect(result[0]).toEqual({ fsa_rn: "5768", collected: false });
       });
     });
   });
