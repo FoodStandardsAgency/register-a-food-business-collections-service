@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         "activities",
         "opening_days_irregular",
@@ -42,10 +42,10 @@ module.exports = {
         "opening_day_sunday",
         Sequelize.BOOLEAN
       )
-    ];
+    ]);
   },
   down: queryInterface => {
-    return [
+    return Promise.all([
       queryInterface.removeColumn("activities", "opening_days_irregular"),
       queryInterface.removeColumn("activities", "opening_day_monday"),
       queryInterface.removeColumn("activities", "opening_day_tuesday"),
@@ -54,6 +54,6 @@ module.exports = {
       queryInterface.removeColumn("activities", "opening_day_friday"),
       queryInterface.removeColumn("activities", "opening_day_saturday"),
       queryInterface.removeColumn("activities", "opening_day_sunday")
-    ];
+    ]);
   }
 };

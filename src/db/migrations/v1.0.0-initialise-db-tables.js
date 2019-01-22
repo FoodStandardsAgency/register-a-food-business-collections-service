@@ -137,7 +137,7 @@ const createPremises = (queryInterface, Sequelize) =>
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       createRegistrations(queryInterface, Sequelize).then(() => {
         createMetadata(queryInterface, Sequelize);
         createEstablishments(queryInterface, Sequelize).then(() => {
@@ -146,16 +146,16 @@ module.exports = {
           createPremises(queryInterface, Sequelize);
         });
       })
-    ];
+    ]);
   },
   down: queryInterface => {
-    return [
+    return Promise.all([
       queryInterface.dropTable("activities"),
       queryInterface.dropTable("establishments"),
       queryInterface.dropTable("metadata"),
       queryInterface.dropTable("operators"),
       queryInterface.dropTable("premises"),
       queryInterface.dropTable("registrations")
-    ];
+    ]);
   }
 };

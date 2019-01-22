@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.addColumn("activities", "customer_type", Sequelize.STRING),
       queryInterface.addColumn("activities", "business_type", Sequelize.STRING),
       queryInterface.addColumn(
@@ -64,10 +64,10 @@ module.exports = {
         Sequelize.STRING
       ),
       queryInterface.addColumn("registrations", "fsa_rn", Sequelize.STRING)
-    ];
+    ]);
   },
   down: queryInterface => {
-    return [
+    return Promise.all([
       queryInterface.removeColumn("activities", "customer_type"),
       queryInterface.removeColumn("activities", "business_type"),
       queryInterface.removeColumn("activities", "business_type_search_term"),
@@ -91,6 +91,6 @@ module.exports = {
       queryInterface.removeColumn("premises", "establishment_town"),
       queryInterface.removeColumn("premises", "establishment_postcode"),
       queryInterface.removeColumn("premises", "establishment_type")
-    ];
+    ]);
   }
 };

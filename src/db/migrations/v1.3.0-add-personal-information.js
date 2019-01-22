@@ -1,7 +1,7 @@
 "use strict";
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return [
+    return Promise.all([
       queryInterface.addColumn(
         "establishments",
         "establishment_primary_number",
@@ -84,10 +84,10 @@ module.exports = {
         "contact_representative_email",
         Sequelize.STRING
       )
-    ];
+    ]);
   },
   down: queryInterface => {
-    return [
+    return Promise.all([
       queryInterface.removeColumn(
         "establishments",
         "establishment_primary_number"
@@ -112,6 +112,6 @@ module.exports = {
       queryInterface.removeColumn("operators", "contact_representative_role"),
       queryInterface.removeColumn("operators", "contact_representative_number"),
       queryInterface.removeColumn("operators", "contact_representative_email")
-    ];
+    ]);
   }
 };
