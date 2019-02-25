@@ -4,10 +4,6 @@ const validateString = value => {
   return typeof value === "string";
 };
 
-const validateBoolean = value => {
-  return typeof value === "boolean";
-};
-
 const validateBooleanString = value => {
   const validValues = ["true", "false"];
   return validValues.includes(value);
@@ -45,7 +41,7 @@ const validationFields = {
     message: `fields options must be the from the following list: ${allowedFields}`
   },
   collected: {
-    function: validateBoolean,
+    function: validateBooleanString,
     message: "collected option must be a boolean"
   },
   fsa_rn: {

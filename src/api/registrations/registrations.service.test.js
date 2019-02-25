@@ -117,7 +117,7 @@ describe("registrations.service", () => {
     describe("When given valid collected", () => {
       beforeEach(() => {
         const options = {
-          collected: true
+          collected: "true"
         };
         result = validateOptions(options);
       });
@@ -132,7 +132,7 @@ describe("registrations.service", () => {
         1233,
         ["invalid"],
         {},
-        "false",
+        false,
         null,
         undefined,
         "thing"
