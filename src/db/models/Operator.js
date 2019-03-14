@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
   );
   Operator.associate = function(models) {
     Operator.belongsTo(models.establishment);
+    Operator.hasMany(models.partner);
   };
   return Operator;
 };

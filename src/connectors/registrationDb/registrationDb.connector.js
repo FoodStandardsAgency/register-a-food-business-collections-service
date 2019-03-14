@@ -3,6 +3,7 @@ const {
   Establishment,
   Metadata,
   Operator,
+  Partner,
   Premise,
   Registration,
   connectToDb
@@ -43,7 +44,12 @@ const getMetadataByRegId = async id => {
 
 const getOperatorByEstablishmentId = async id => {
   return modelFindOne(
-    { where: { establishmentId: id } },
+    { where: { establishmentId: id },
+      include: [{ 
+        model: Partner,
+        as: 'partners'
+      }]
+    },
     Operator,
     "getOperatorByEstablishmentId"
   );

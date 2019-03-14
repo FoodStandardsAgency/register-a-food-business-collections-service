@@ -15,9 +15,6 @@ jest.mock("../../db/db", () => ({
   Premise: {
     findOne: jest.fn()
   },
-  Partner: {
-    findAll: jest.fn()
-  },
   Registration: {
     findOne: jest.fn(),
     findAll: jest.fn(),
@@ -332,7 +329,10 @@ describe("collect.service", () => {
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { operator_name: "fred" }
+          dataValues: { operator_name: "fred",
+                partners: [{
+                partner_name: "Darleene"
+              }]}
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
@@ -342,12 +342,6 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { establishment_postcode: "ER1 56GF" }
         }));
-        Partner.findAll.mockImplementation(() => (
-          [{
-            id: 1,
-            dataValues: { name: "Darline"}
-          }]
-        ));
         Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
@@ -359,7 +353,7 @@ describe("collect.service", () => {
       it("Should return the full registration", () => {
         expect(result.fsa_rn).toBe("1234");
         expect(result.establishment.establishment_trading_name).toBe("taco");
-        expect(result.establishment.operator.partners[0].partner_name).toBe("Darline");
+        expect(result.establishment.operator.partners[0].partner_name).toBe("Darleene");
       });
     });
   });
