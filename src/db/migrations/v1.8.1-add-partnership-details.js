@@ -13,10 +13,10 @@ module.exports = {
       updatedAt: {
         type: Sequelize.DATE
       },
-      name: {
+      partner_name: {
         type: Sequelize.STRING
       },
-      is_primary_contact: {
+      partner_is_primary_contact: {
         type: Sequelize.BOOLEAN
       },
       operatorId: {
