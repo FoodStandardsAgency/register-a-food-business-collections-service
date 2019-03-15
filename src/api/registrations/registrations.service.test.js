@@ -142,5 +142,33 @@ describe("registrations.service", () => {
         expect(result).not.toBe(true);
       });
     });
+
+    describe("When given valid before", () => {
+      beforeEach(() => {
+        const options = {
+          before: "2019-03-15T15:53:40Z"
+        };
+        result = validateOptions(options);
+      });
+      it("should return true", () => {
+        expect(result).toBe(true);
+      });
+    });
+
+    describe("When given invalid before", () => {
+      const invalidBefore = [
+        1233979468,
+        ["invalid"],
+        {},
+        "false",
+        null,
+        undefined,
+        "thing"
+      ];
+      invalidBefore.forEach(before => {
+        result = validateOptions({ before });
+        expect(result).not.toBe(true);
+      });
+    });
   });
 });
