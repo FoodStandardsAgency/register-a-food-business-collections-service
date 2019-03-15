@@ -27,6 +27,11 @@ const validateFields = value => {
   return value.every(val => allowedFields.includes(val));
 };
 
+const validateDateTime = value => {
+  const result = Date.parse(value);
+  return !Number.isNaN(result);
+};
+
 const validationFields = {
   council: {
     function: validateString,
@@ -51,6 +56,10 @@ const validationFields = {
   fsa_rn: {
     function: validateString,
     message: "fsa_rn option must be a string"
+  },
+  before: {
+    function: validateDateTime,
+    message: "before option must be date of format 'yyyy-MM-ddTHH:mm:ssZ'"
   }
 };
 
