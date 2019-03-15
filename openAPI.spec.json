@@ -423,8 +423,32 @@
                   "maximum": "8",
                   "minimum": "6",
                   "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), allows '-'"
+              },
+              "operator_uprn": {
+                  "type": "string"
+              },
+              "partners": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Partner"
+                    }
               }
           }
+      },
+      "Partner": {
+        "type": "object",
+        "properties": {
+            "partner_name": {
+                "type": "string",
+                "required": true,
+                "description": "ASCII string"
+            },
+            "partner_is_primary_contact": {
+                "type": "boolean",
+                "required": true,
+                "description": "Flag indicating if the partner is primary contact."
+            }
+        }
       },
       "Premise": {
           "type": "object",
@@ -454,6 +478,10 @@
                   "type": "string",
                   "required": true,
                   "description": "Possible values: 'Place of business or commercial premises', 'Mobile or moveable premises', 'Home or domestic premises'"
+              },
+              "establishment_uprn": {
+                  "type": "string",
+                  "required": true
               }
           }
       },
