@@ -44,11 +44,14 @@ const getMetadataByRegId = async id => {
 
 const getOperatorByEstablishmentId = async id => {
   return modelFindOne(
-    { where: { establishmentId: id },
-      include: [{ 
-        model: Partner,
-        as: 'partners'
-      }]
+    {
+      where: { establishmentId: id },
+      include: [
+        {
+          model: Partner,
+          as: "partners"
+        }
+      ]
     },
     Operator,
     "getOperatorByEstablishmentId"
