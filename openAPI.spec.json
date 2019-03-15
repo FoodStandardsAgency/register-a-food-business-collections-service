@@ -330,10 +330,22 @@
                   "description": "ASCII string",
                   "maximum": "255"
               },
+              "partners": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/Partner"
+                    }
+              },
               "operator_postcode": {
                   "type": "string",
                   "required": true,
                   "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)"
+              },
+              "operator_uprn": {
+                  "type": "string",
+                  "required": false,
+                  "maximum": 12,
+                  "description": "Unique Property Reference Number"
               },
               "operator_first_line": {
                   "type": "string",
@@ -423,15 +435,6 @@
                   "maximum": "8",
                   "minimum": "6",
                   "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), allows '-'"
-              },
-              "operator_uprn": {
-                  "type": "string"
-              },
-              "partners": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/Partner"
-                    }
               }
           }
       },
@@ -446,7 +449,7 @@
             "partner_is_primary_contact": {
                 "type": "boolean",
                 "required": true,
-                "description": "Flag indicating if the partner is primary contact."
+                "description": "Flag indicating whether the partner is the primary contact"
             }
         }
       },
@@ -457,6 +460,12 @@
                 "type": "string",
                 "required": true,
                 "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)"
+              },
+              "establishment_uprn": {
+                  "type": "string",
+                  "required": false,
+                  "maximum": 12,
+                  "description": "Unique Property Reference Number"
               },
               "establishment_first_line": {
                   "type": "string",
@@ -478,10 +487,6 @@
                   "type": "string",
                   "required": true,
                   "description": "Possible values: 'Place of business or commercial premises', 'Mobile or moveable premises', 'Home or domestic premises'"
-              },
-              "establishment_uprn": {
-                  "type": "string",
-                  "required": true
               }
           }
       },
