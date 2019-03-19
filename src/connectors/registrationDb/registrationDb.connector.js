@@ -74,7 +74,7 @@ const getActivitiesByEstablishmentId = async id => {
   );
 };
 
-const getRegistrationTable = async (council, collected) => {
+const getRegistrationTableByCouncil = async (council, collected) => {
   logEmitter.emit(
     "functionCall",
     "registration.connector.js",
@@ -177,11 +177,15 @@ const getFullRegistration = async (registration, fields = []) => {
   );
 };
 
-const getAllRegistrations = async (council, newRegistrations, fields) => {
+const getAllRegistrationsByCouncil = async (
+  council,
+  newRegistrations,
+  fields
+) => {
   logEmitter.emit(
     "functionCall",
     "registrationsDb.connector",
-    "getAllRegistrations"
+    "getAllRegistrationsByCouncil"
   );
 
   await connectToDb();
@@ -189,7 +193,10 @@ const getAllRegistrations = async (council, newRegistrations, fields) => {
   const registrationPromises = [];
   // get NEW [false, null] or EVERYTHING [true, false, null]
   const queryArray = newRegistrations === "true" ? [false] : [true, false];
-  const registrations = await getRegistrationTable(council, queryArray);
+  const registrations = await getRegistrationTableByCouncil(
+    council,
+    queryArray
+  );
 
   registrations.forEach(registration => {
     registrationPromises.push(getFullRegistration(registration, fields));
@@ -198,7 +205,7 @@ const getAllRegistrations = async (council, newRegistrations, fields) => {
   logEmitter.emit(
     "functionSuccess",
     "registrationsDb.connector",
-    "getAllRegistrations"
+    "getAllRegistrationsByCouncil"
   );
   return fullRegistrations;
 };
@@ -246,7 +253,7 @@ const updateRegistrationCollected = async (fsa_rn, collected, council) => {
 };
 
 module.exports = {
-  getAllRegistrations,
+  getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollected
 };

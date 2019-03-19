@@ -1,5 +1,5 @@
 const {
-  getAllRegistrations,
+  getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollected
 } = require("../../connectors/registrationDb/registrationDb.connector");
@@ -12,11 +12,11 @@ const {
 
 const { logEmitter } = require("../../services/logging.service");
 
-const getRegistrations = async options => {
+const getRegistrationsByCouncil = async options => {
   logEmitter.emit(
     "functionCall",
     "registrations.controller",
-    "getRegistrations"
+    "getRegistrationsByCouncil"
   );
 
   const validationResult = validateOptions(options);
@@ -25,7 +25,7 @@ const getRegistrations = async options => {
     if (options.double_mode) {
       return registrationDbDouble(options.double_mode);
     }
-    const registrations = await getAllRegistrations(
+    const registrations = await getAllRegistrationsByCouncil(
       options.council,
       options.new,
       options.fields
@@ -33,7 +33,7 @@ const getRegistrations = async options => {
     logEmitter.emit(
       "functionSuccess",
       "registrations.controller",
-      "getRegistrations"
+      "getRegistrationsByCouncil"
     );
     return registrations;
   } else {
@@ -48,7 +48,7 @@ const getRegistration = async options => {
   logEmitter.emit(
     "functionCall",
     "registrations.controller",
-    "getSingleRegistration"
+    "getRegistration"
   );
 
   const validationResult = validateOptions(options);
@@ -64,7 +64,7 @@ const getRegistration = async options => {
     logEmitter.emit(
       "functionSuccess",
       "registrations.controller",
-      "getRegistrations"
+      "getRegistration"
     );
     return registration;
   } else {
@@ -110,4 +110,8 @@ const updateRegistration = async options => {
   }
 };
 
-module.exports = { getRegistrations, getRegistration, updateRegistration };
+module.exports = {
+  getRegistrationsByCouncil,
+  getRegistration,
+  updateRegistration
+};

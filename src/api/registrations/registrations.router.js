@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const { logEmitter } = require("../../services/logging.service");
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
   updateRegistration
 } = require("./registrations.controller");
@@ -21,7 +21,7 @@ const registrationsRouter = () => {
         council: req.params.lc
       };
 
-      registrations = await getRegistrations(options);
+      registrations = await getRegistrationsByCouncil(options);
 
       logEmitter.emit(
         "functionSuccess",
