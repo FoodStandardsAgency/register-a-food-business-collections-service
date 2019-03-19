@@ -19,6 +19,13 @@ module.exports = (sequelize, DataTypes) => {
       },
       collected_at: {
         type: DataTypes.STRING
+      },
+      unified_view_collected: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      },
+      unified_view_collected_at: {
+        type: DataTypes.STRING
       }
     },
     {}
