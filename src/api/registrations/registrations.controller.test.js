@@ -1,5 +1,5 @@
 jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
-  getAllRegistrations: jest.fn(),
+  getAllRegistrationsByCouncil: jest.fn(),
   getSingleRegistration: jest.fn(),
   updateRegistrationCollected: jest.fn(),
   registrationDbDouble: jest.fn()
@@ -10,25 +10,27 @@ jest.mock("./registrations.service");
 const { validateOptions } = require("./registrations.service");
 
 const {
-  getAllRegistrations,
+  getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollected
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
   updateRegistration
 } = require("./registrations.controller");
 
 describe("registrations.controller", () => {
   let result;
-  describe("Function: getRegistrations", () => {
+  describe("Function: getRegistrationsByCouncil", () => {
     describe("When given invalid getNewRegistrations option", () => {
       beforeEach(async () => {
         try {
           validateOptions.mockImplementation(() => false);
-          await getRegistrations({ getNewRegistrations: "not a boolean" });
+          await getRegistrationsByCouncil({
+            getNewRegistrations: "not a boolean"
+          });
         } catch (err) {
           result = err;
         }
@@ -41,7 +43,7 @@ describe("registrations.controller", () => {
     describe("When given double mode", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        result = await getRegistrations({
+        result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
           double_mode: "success"
         });
@@ -53,14 +55,16 @@ describe("registrations.controller", () => {
     describe("When successful", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        getAllRegistrations.mockImplementation(() => [{ id: 1, data: "data" }]);
-        result = await getRegistrations({
+        getAllRegistrationsByCouncil.mockImplementation(() => [
+          { id: 1, data: "data" }
+        ]);
+        result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
           council: "cardiff"
         });
       });
 
-      it("Should return the result of getAllRegistrations", () => {
+      it("Should return the result of getAllRegistrationsByCouncil", () => {
         expect(result).toEqual([{ id: 1, data: "data" }]);
       });
     });

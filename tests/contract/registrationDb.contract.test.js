@@ -1,7 +1,7 @@
 require("dotenv").config();
 
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
   updateRegistration
 } = require("../../src/api/registrations/registrations.controller");
@@ -17,8 +17,8 @@ afterAll(() => {
 
 describe("registrationDb.connector integration: getAllRegistrations", () => {
   beforeEach(async () => {
-    doubleResult = await getRegistrations({ double_mode: "success" });
-    realResult = await getRegistrations({
+    doubleResult = await getRegistrationsByCouncil({ double_mode: "success" });
+    realResult = await getRegistrationsByCouncil({
       council: "cardiff",
       fields: ["establishment", "metadata"]
     });
@@ -56,7 +56,9 @@ describe("registrationDb.connector integration: getAllRegistrations", () => {
 describe("registrationDb.connector integration: getSingleRegistrations", () => {
   beforeEach(async () => {
     doubleResult = await getRegistration({ double_mode: "single" });
-    const realSummaryResult = await getRegistrations({ council: "cardiff" });
+    const realSummaryResult = await getRegistrationsByCouncil({
+      council: "cardiff"
+    });
     realResult = await getRegistration({
       council: "cardiff",
       fsa_rn: realSummaryResult[0].fsa_rn
@@ -85,7 +87,7 @@ describe("registrationDb.connector integration: getSingleRegistrations", () => {
 describe("registrationDb.connector integration: updateRegistrationCollected", () => {
   beforeEach(async () => {
     doubleResult = await updateRegistration({ double_mode: "update" });
-    const realSummaryResult = await getRegistrations({
+    const realSummaryResult = await getRegistrationsByCouncil({
       council: "the-vale-of-glamorgan"
     });
     realResult = await getRegistration({
