@@ -1,7 +1,7 @@
 jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
   getAllRegistrationsByCouncil: jest.fn(),
   getSingleRegistration: jest.fn(),
-  updateRegistrationCollected: jest.fn(),
+  updateRegistrationCollectedByCouncil: jest.fn(),
   registrationDbDouble: jest.fn()
 }));
 
@@ -12,7 +12,7 @@ const { validateOptions } = require("./registrations.service");
 const {
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  updateRegistrationCollectedByCouncil
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const {
@@ -145,7 +145,7 @@ describe("registrations.controller", () => {
     describe("When successful", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        updateRegistrationCollected.mockImplementation(() => ({
+        updateRegistrationCollectedByCouncil.mockImplementation(() => ({
           fsa_rn: "5768",
           collected: true
         }));
