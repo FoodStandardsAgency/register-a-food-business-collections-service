@@ -39,7 +39,8 @@ const {
   getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
+  updateRegistrationCollectedByUnified
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -300,6 +301,70 @@ describe("collect.service", () => {
         Registration.update.mockImplementation(() => [0]);
         try {
           await updateRegistrationCollectedByCouncil("1234", true, "cardiff");
+        } catch (err) {
+          result = err;
+        }
+      });
+
+      it("Should bubble the error up", () => {
+        expect(result.name).toBe("updateRegistrationNotFoundError");
+      });
+    });
+  });
+
+  describe("Function: updateRegistrationCollectedByUnified", () => {
+    let result;
+    describe("When Registration.update is successful", () => {
+      beforeEach(async () => {
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateRegistrationCollectedByUnified("1234", true);
+      });
+
+      it("Should return fsa_rn and collected", () => {
+        expect(result).toEqual({ fsa_rn: "1234", collected: true });
+      });
+
+      it("Should pass collected to registration update", () => {
+        expect(
+          Registration.update.mock.calls[0][0].unified_view_collected
+        ).toBe(true);
+      });
+
+      it("Should pass fsa_rn to registration update", () => {
+        expect(Registration.update.mock.calls[0][1].where.fsa_rn).toBe("1234");
+      });
+
+      it("Should call update with ISO date", () => {
+        expect(
+          isISO8601(
+            Registration.update.mock.calls[0][0].unified_view_collected_at
+          )
+        ).toBe(true);
+      });
+    });
+
+    describe("When Registration.update throws an error", () => {
+      beforeEach(async () => {
+        Registration.update.mockImplementation(() => {
+          throw new Error("Failed");
+        });
+        try {
+          await updateRegistrationCollectedByUnified("1234", true);
+        } catch (err) {
+          result = err;
+        }
+      });
+
+      it("Should bubble the error up", () => {
+        expect(result.message).toBe("Failed");
+      });
+    });
+
+    describe("When Registration.update returns no results", () => {
+      beforeEach(async () => {
+        Registration.update.mockImplementation(() => [0]);
+        try {
+          await updateRegistrationCollectedByUnified("1234", true, "cardiff");
         } catch (err) {
           result = err;
         }
