@@ -24,6 +24,8 @@ jest.mock("../../db/db", () => ({
   closeConnection: jest.fn()
 }));
 
+const { Op } = require("sequelize");
+
 const {
   Activities,
   Establishment,
@@ -34,6 +36,7 @@ const {
 } = require("../../db/db");
 
 const {
+  getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollected
@@ -365,6 +368,243 @@ describe("collect.service", () => {
         expect(result.establishment.operator.partners[0].partner_name).toBe(
           "Darleene"
         );
+      });
+    });
+  });
+
+  describe("Function: getAllRegistrations", () => {
+    let result;
+
+    describe("when collected inputs are true", () => {
+      beforeEach(() => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+
+        Establishment.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_trading_name: "taco" }
+        }));
+        Operator.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { operator_name: "fred" }
+        }));
+        Activities.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { business_type: "cookies" }
+        }));
+        Premise.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_postcode: "ER1 56GF" }
+        }));
+        Metadata.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = getAllRegistrations("true", "true", "2019-01-01T13:00:00Z");
+      });
+
+      it("should call registration.findAll with queryArray [false, null]", () => {
+        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
+          false
+        ]);
+        expect(
+          Registration.findAll.mock.calls[0][0].where.unified_view_collected
+        ).toEqual([false]);
+      });
+    });
+
+    describe("when collected inputs are false", () => {
+      beforeEach(() => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+
+        Establishment.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_trading_name: "taco" }
+        }));
+        Operator.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { operator_name: "fred" }
+        }));
+        Activities.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { business_type: "cookies" }
+        }));
+        Premise.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_postcode: "ER1 56GF" }
+        }));
+        Metadata.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = getAllRegistrations("false", "false", "2019-01-01T13:00:00Z");
+      });
+
+      it("should call registration.findAll with queryArray [true, false, null]", () => {
+        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
+          true,
+          false
+        ]);
+        expect(
+          Registration.findAll.mock.calls[0][0].where.unified_view_collected
+        ).toEqual([true, false]);
+      });
+    });
+
+    describe("when date and time not provided", () => {
+      beforeEach(() => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+
+        Establishment.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_trading_name: "taco" }
+        }));
+        Operator.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { operator_name: "fred" }
+        }));
+        Activities.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { business_type: "cookies" }
+        }));
+        Premise.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_postcode: "ER1 56GF" }
+        }));
+        Metadata.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = getAllRegistrations("false", "false", null, []);
+      });
+
+      it("should call registration.findAll with a valid date time", () => {
+        expect(
+          isISO8601(
+            Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
+          )
+        ).toBe(true);
+      });
+    });
+
+    describe("when getAllRegistrations returns a result", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+
+        result = await getAllRegistrations(true, true, "2019-01-01T13:00:00Z");
+      });
+
+      it("Should return two registrations", () => {
+        expect(result.length).toBe(2);
+      });
+    });
+
+    describe("when fields is empty", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        result = await getAllRegistrations(
+          true,
+          true,
+          "2019-01-01T15:00:00Z",
+          []
+        );
+      });
+
+      it("should return just the registration fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toEqual({});
+        expect(result[0].metadata).toEqual({});
+      });
+    });
+
+    describe("when fields includes establishment", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        Establishment.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_trading_name: "taco" }
+        }));
+        Operator.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { operator_name: "fred" }
+        }));
+        Activities.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { business_type: "cookies" }
+        }));
+        Premise.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_postcode: "ER1 56GF" }
+        }));
+        Metadata.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = await getAllRegistrations(true, true, "2019-01-01T15:00:00Z", [
+          "establishment"
+        ]);
+      });
+      it("should return just the establishment, operator, premise, activities fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toBeDefined();
+        expect(result[0].establishment.premise).toBeDefined();
+        expect(result[0].establishment.operator).toBeDefined();
+        expect(result[0].establishment.activities).toBeDefined();
+      });
+    });
+
+    describe("when fields includes metadata", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        Metadata.findOne.mockImplementation(async () => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = await getAllRegistrations(true, true, "2019-01-01T15:00:00Z", [
+          "metadata"
+        ]);
+      });
+      it("should return just the metadata fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toEqual({});
+        expect(result[0].metadata).toBeDefined();
+      });
+    });
+
+    describe("when getRegistrationsTable returns an error", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => {
+          throw new Error("Failed");
+        });
+
+        try {
+          await getAllRegistrations(true, true);
+        } catch (err) {
+          result = err;
+        }
+      });
+      it("should bubble the error up ", () => {
+        expect(result.message).toBe("Failed");
       });
     });
   });
