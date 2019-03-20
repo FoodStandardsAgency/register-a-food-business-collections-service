@@ -335,9 +335,51 @@ const updateRegistrationCollectedByCouncil = async (
   return { fsa_rn, collected };
 };
 
+const updateRegistrationCollectedByUnified = async (fsa_rn, collected) => {
+  logEmitter.emit(
+    "functionCall",
+    "registrationsDb.connector",
+    "updateRegistrationCollectedByUnified"
+  );
+
+  await connectToDb();
+
+  const isoDate = convertJSDateToISODate();
+  const response = await Registration.update(
+    {
+      unified_view_collected: collected,
+      unified_view_collected_at: isoDate
+    },
+    {
+      where: {
+        fsa_rn
+      }
+    }
+  );
+
+  if (response[0] === 0) {
+    const error = new Error("updateRegistrationNotFoundError");
+    error.name = "updateRegistrationNotFoundError";
+    logEmitter.emit(
+      "functionFail",
+      "registrationsDb.connector",
+      "updateRegistrationCollectedByUnified",
+      error
+    );
+    throw error;
+  }
+  logEmitter.emit(
+    "functionSuccess",
+    "registrationsDb.connector",
+    "updateRegistrationCollectedByUnified"
+  );
+  return { fsa_rn, collected };
+};
+
 module.exports = {
   getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
+  updateRegistrationCollectedByUnified
 };
