@@ -39,7 +39,7 @@ const {
   getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  updateRegistrationCollectedByCouncil
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -241,12 +241,16 @@ describe("collect.service", () => {
     });
   });
 
-  describe("Function: updateRegistrationCollected", () => {
+  describe("Function: updateRegistrationCollectedByCouncil", () => {
     let result;
     describe("When Registration.update is successful", () => {
       beforeEach(async () => {
         Registration.update.mockImplementation(() => [1]);
-        result = await updateRegistrationCollected("1234", true, "cardiff");
+        result = await updateRegistrationCollectedByCouncil(
+          "1234",
+          true,
+          "cardiff"
+        );
       });
 
       it("Should return fsa_rn and collected", () => {
@@ -280,7 +284,7 @@ describe("collect.service", () => {
           throw new Error("Failed");
         });
         try {
-          await updateRegistrationCollected("1234", true);
+          await updateRegistrationCollectedByCouncil("1234", true);
         } catch (err) {
           result = err;
         }
@@ -295,7 +299,7 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.update.mockImplementation(() => [0]);
         try {
-          await updateRegistrationCollected("1234", true, "cardiff");
+          await updateRegistrationCollectedByCouncil("1234", true, "cardiff");
         } catch (err) {
           result = err;
         }

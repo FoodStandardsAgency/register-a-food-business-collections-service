@@ -289,11 +289,15 @@ const getAllRegistrationsByCouncil = async (
   return fullRegistrations;
 };
 
-const updateRegistrationCollected = async (fsa_rn, collected, council) => {
+const updateRegistrationCollectedByCouncil = async (
+  fsa_rn,
+  collected,
+  council
+) => {
   logEmitter.emit(
     "functionCall",
     "registrationsDb.connector",
-    "updateRegistrationCollected"
+    "updateRegistrationCollectedByCouncil"
   );
 
   await connectToDb();
@@ -318,7 +322,7 @@ const updateRegistrationCollected = async (fsa_rn, collected, council) => {
     logEmitter.emit(
       "functionFail",
       "registrationsDb.connector",
-      "updateRegistrationCollected",
+      "updateRegistrationCollectedByCouncil",
       error
     );
     throw error;
@@ -326,7 +330,7 @@ const updateRegistrationCollected = async (fsa_rn, collected, council) => {
   logEmitter.emit(
     "functionSuccess",
     "registrationsDb.connector",
-    "updateRegistrationCollected"
+    "updateRegistrationCollectedByCouncil"
   );
   return { fsa_rn, collected };
 };
@@ -335,5 +339,5 @@ module.exports = {
   getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  updateRegistrationCollectedByCouncil
 };

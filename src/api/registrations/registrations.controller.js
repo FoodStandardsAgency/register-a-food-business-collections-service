@@ -1,7 +1,7 @@
 const {
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  updateRegistrationCollectedByCouncil
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const { validateOptions } = require("./registrations.service");
@@ -89,7 +89,7 @@ const updateRegistration = async options => {
       return registrationDbDouble(options.double_mode);
     }
 
-    const response = await updateRegistrationCollected(
+    const response = await updateRegistrationCollectedByCouncil(
       options.fsa_rn,
       options.collected,
       options.council
