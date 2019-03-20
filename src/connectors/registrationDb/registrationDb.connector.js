@@ -10,6 +10,8 @@ const {
 } = require("../../db/db");
 const { logEmitter } = require("../../services/logging.service");
 
+const { Op } = require("sequelize");
+
 const modelFindOne = async (query, model) => {
   try {
     return model.findOne(query);
@@ -104,6 +106,43 @@ const getRegistrationTableByCouncil = async (council, collected) => {
   }
 };
 
+const getRegistrationTable = async (
+  collected,
+  unified_view_collected,
+  before
+) => {
+  logEmitter.emit(
+    "functionCall",
+    "registration.connector.js",
+    "getRegistrationTable"
+  );
+  try {
+    const response = await Registration.findAll({
+      where: {
+        collected,
+        unified_view_collected,
+        createdAt: {
+          [Op.lte]: before
+        }
+      }
+    });
+    logEmitter.emit(
+      "functionSuccess",
+      "registration.connector.js",
+      "getRegistrationTable"
+    );
+    return response;
+  } catch (err) {
+    logEmitter.emit(
+      "functionFail",
+      "registration.connector.js",
+      "getRegistrationTable",
+      err
+    );
+    throw err;
+  }
+};
+
 const getFullEstablishment = async id => {
   const establishment = await getEstablishmentByRegId(id);
   const [operator, activities, premise] = await Promise.all([
@@ -175,6 +214,46 @@ const getFullRegistration = async (registration, fields = []) => {
     { establishment },
     { metadata }
   );
+};
+
+const getAllRegistrations = async (
+  newRegistrationsLC,
+  newRegistrationsUV,
+  registrationsBefore,
+  fields
+) => {
+  logEmitter.emit(
+    "functionCall",
+    "registrationsDb.connector",
+    "getAllRegistrations"
+  );
+
+  await connectToDb();
+
+  const councilArray = newRegistrationsLC === "true" ? [false] : [true, false];
+  const unifiedArray = newRegistrationsUV === "true" ? [false] : [true, false];
+  const beforeDate = registrationsBefore
+    ? registrationsBefore
+    : convertJSDateToISODate();
+
+  const registrations = await getRegistrationTable(
+    councilArray,
+    unifiedArray,
+    beforeDate
+  );
+
+  const registrationPromises = [];
+  registrations.forEach(registration => {
+    registrationPromises.push(getFullRegistration(registration, fields));
+  });
+  const fullRegistrations = await Promise.all(registrationPromises);
+
+  logEmitter.emit(
+    "functionSuccess",
+    "registrationsDb.connector",
+    "getAllRegistrations"
+  );
+  return fullRegistrations;
 };
 
 const getAllRegistrationsByCouncil = async (
@@ -253,6 +332,7 @@ const updateRegistrationCollected = async (fsa_rn, collected, council) => {
 };
 
 module.exports = {
+  getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollected
