@@ -335,7 +335,50 @@ const updateRegistrationCollectedByCouncil = async (
   return { fsa_rn, collected };
 };
 
-const updateRegistrationCollectedByUnified = async (fsa_rn, collected) => {
+const updateAllRegistrationsCollectedByUnified = async (
+  newRegistrationsLC,
+  newRegistrationsUV,
+  registrationsBefore
+) => {
+  logEmitter.emit(
+    "functionCall",
+    "registrationsDb.connector",
+    "updateAllRegistrationsCollectedByUnified"
+  );
+
+  await connectToDb();
+
+  const updatePromises = [];
+  const councilArray = newRegistrationsLC === "true" ? [false] : [true, false];
+  const unifiedArray = newRegistrationsUV === "true" ? [false] : [true, false];
+  const beforeDate = registrationsBefore
+    ? registrationsBefore
+    : convertJSDateToISODate();
+
+  const registrations = await getRegistrationTable(
+    councilArray,
+    unifiedArray,
+    beforeDate
+  );
+
+  registrations.forEach(registration => {
+    updatePromises.push(
+      updateRegistrationCollectedByUnified(registration.dataValues.fsa_rn, true)
+    );
+  });
+  const fullUpdates = await Promise.all(updatePromises);
+  logEmitter.emit(
+    "functionSuccess",
+    "registrationsDb.connector",
+    "updateAllRegistrationsCollectedByUnified"
+  );
+  return fullUpdates;
+};
+
+const updateRegistrationCollectedByUnified = async (
+  fsa_rn,
+  unified_view_collected
+) => {
   logEmitter.emit(
     "functionCall",
     "registrationsDb.connector",
@@ -343,11 +386,10 @@ const updateRegistrationCollectedByUnified = async (fsa_rn, collected) => {
   );
 
   await connectToDb();
-
   const isoDate = convertJSDateToISODate();
   const response = await Registration.update(
     {
-      unified_view_collected: collected,
+      unified_view_collected,
       unified_view_collected_at: isoDate
     },
     {
@@ -373,13 +415,14 @@ const updateRegistrationCollectedByUnified = async (fsa_rn, collected) => {
     "registrationsDb.connector",
     "updateRegistrationCollectedByUnified"
   );
-  return { fsa_rn, collected };
+  return { fsa_rn, unified_view_collected };
 };
 
 module.exports = {
   getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
+  updateAllRegistrationsCollectedByUnified,
   updateRegistrationCollectedByCouncil,
   updateRegistrationCollectedByUnified
 };
