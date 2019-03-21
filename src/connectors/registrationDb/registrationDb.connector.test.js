@@ -40,7 +40,8 @@ const {
   getAllRegistrationsByCouncil,
   getSingleRegistration,
   updateRegistrationCollectedByCouncil,
-  updateRegistrationCollectedByUnified
+  updateRegistrationCollectedByUnified,
+  updateAllRegistrationsCollectedByUnified
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -312,6 +313,130 @@ describe("collect.service", () => {
     });
   });
 
+  describe("Function: updateAllRegistrationsCollectedByUnified", () => {
+    var result;
+    describe("When Registration.update is successful", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } }
+        ]);
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateAllRegistrationsCollectedByUnified(
+          true,
+          true,
+          "2019-01-01T15:00:00Z"
+        );
+      });
+
+      it("Should return fsa_rn and collected", () => {
+        expect(result).toEqual([
+          { fsa_rn: "1234", unified_view_collected: true }
+        ]);
+      });
+    });
+
+    describe("When collected values are true", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } }
+        ]);
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateAllRegistrationsCollectedByUnified(
+          "true",
+          "true",
+          "2019-01-01T15:00:00Z"
+        );
+      });
+
+      it("should call registration.findAll with queryArray [false, null]", () => {
+        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
+          false
+        ]);
+        expect(
+          Registration.findAll.mock.calls[0][0].where.unified_view_collected
+        ).toEqual([false]);
+      });
+
+      it("Should pass collected to registration update", () => {
+        expect(
+          Registration.update.mock.calls[0][0].unified_view_collected
+        ).toBe(true);
+      });
+
+      it("Should pass fsa_rn to registration update", () => {
+        expect(Registration.update.mock.calls[0][1].where.fsa_rn).toBe("1234");
+      });
+    });
+
+    describe("When collected values are false", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } }
+        ]);
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateAllRegistrationsCollectedByUnified(
+          true,
+          true,
+          "2019-01-01T15:00:00Z"
+        );
+      });
+
+      it("should call registration.findAll with queryArray [true, false, null]", () => {
+        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
+          true,
+          false
+        ]);
+        expect(
+          Registration.findAll.mock.calls[0][0].where.unified_view_collected
+        ).toEqual([true, false]);
+      });
+
+      it("Should pass collected to registration update", () => {
+        expect(
+          Registration.update.mock.calls[0][0].unified_view_collected
+        ).toBe(true);
+      });
+    });
+
+    describe("When a before date is not supplied", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } }
+        ]);
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateAllRegistrationsCollectedByUnified(true, true);
+      });
+
+      it("Should call update with ISO date", () => {
+        expect(
+          isISO8601(
+            Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
+          )
+        ).toBe(true);
+      });
+    });
+
+    describe("When a before date is supplied", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } }
+        ]);
+        Registration.update.mockImplementation(() => [1]);
+        result = await updateAllRegistrationsCollectedByUnified(
+          true,
+          true,
+          "2019-01-01"
+        );
+      });
+
+      it("Should call update with the supplied date", () => {
+        expect(
+          Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
+        ).toBe("2019-01-01");
+      });
+    });
+  });
+
   describe("Function: updateRegistrationCollectedByUnified", () => {
     let result;
     describe("When Registration.update is successful", () => {
@@ -321,7 +446,10 @@ describe("collect.service", () => {
       });
 
       it("Should return fsa_rn and collected", () => {
-        expect(result).toEqual({ fsa_rn: "1234", collected: true });
+        expect(result).toEqual({
+          fsa_rn: "1234",
+          unified_view_collected: true
+        });
       });
 
       it("Should pass collected to registration update", () => {

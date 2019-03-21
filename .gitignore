@@ -64,3 +64,6 @@ reports
 
 # Saved DB data before seeding
 saved-data
+
+# launch.json
+.vscode/launch.json
