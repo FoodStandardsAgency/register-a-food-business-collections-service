@@ -3,11 +3,44 @@ const { logEmitter } = require("../../services/logging.service");
 const {
   getRegistrationsByCouncil,
   getRegistration,
-  updateRegistration
+  getRegistrations,
+  updateRegistration,
+  updateRegistrationForUnified,
+  updateAllRegistrationsForUnified
 } = require("./registrations.controller");
 
 const registrationsRouter = () => {
   const router = Router();
+
+  router.get("/all", async (req, res, next) => {
+    logEmitter.emit("functionCall", "registrations.router", "GET /all route");
+    try {
+      let registrations;
+      const options = {
+        double_mode: req.headers["double-mode"] || "",
+        newForLA: req.query.newForLA || "false",
+        newForUV: req.query.newForUV || "true",
+        before: req.query.before || new Date().toISOString()
+      };
+
+      registrations = await getRegistrations(options);
+
+      logEmitter.emit(
+        "functionSuccess",
+        "registrations.router",
+        "GET /all route"
+      );
+      res.send(registrations);
+    } catch (err) {
+      logEmitter.emit(
+        "functionFail",
+        "registrations.router",
+        "GET /all route",
+        err
+      );
+      next(err);
+    }
+  });
 
   router.get("/:lc", async (req, res, next) => {
     logEmitter.emit("functionCall", "registrations.router", "/:lc route");
@@ -72,6 +105,67 @@ const registrationsRouter = () => {
     }
   });
 
+  router.put("/all/:fsa_rn", async (req, res, next) => {
+    logEmitter.emit(
+      "functionCall",
+      "registrations.router",
+      "PUT /all/:fsa_rn route"
+    );
+    try {
+      const options = {
+        double_mode: req.headers["double-mode"] || "",
+        collected: req.body.collected,
+        fsa_rn: req.params.fsa_rn
+      };
+
+      const response = await updateRegistrationForUnified(options);
+
+      logEmitter.emit(
+        "functionSuccess",
+        "registrations.router",
+        "PUT /all/:fsa_rn route"
+      );
+      res.send(response);
+    } catch (err) {
+      logEmitter.emit(
+        "functionFail",
+        "registrations.router",
+        "PUT /:lc/:fsa_rn route",
+        err
+      );
+      next(err);
+    }
+  });
+
+  router.put("/all", async (req, res, next) => {
+    logEmitter.emit("functionCall", "registrations.router", "PUT /all route");
+
+    const options = {
+      double_mode: req.headers["double-mode"] || "",
+      newForLA: req.query.newForLA || "false",
+      newForUV: req.query.newForUV || "true",
+      before: req.query.before || new Date().toISOString()
+    };
+
+    try {
+      const response = await updateAllRegistrationsForUnified(options);
+
+      logEmitter.emit(
+        "functionSuccess",
+        "registrations.router",
+        "PUT /all route"
+      );
+      res.send(response);
+    } catch (err) {
+      logEmitter.emit(
+        "functionFail",
+        "registrations.router",
+        "PUT /all route",
+        err
+      );
+      next(err);
+    }
+  });
   router.put("/:lc/:fsa_rn", async (req, res, next) => {
     logEmitter.emit(
       "functionCall",
