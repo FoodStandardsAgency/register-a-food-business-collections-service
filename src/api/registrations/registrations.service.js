@@ -1,4 +1,5 @@
 const { logEmitter } = require("../../services/logging.service");
+const { isISO8601 } = require("validator");
 
 const validateString = value => {
   return typeof value === "string";
@@ -13,7 +14,7 @@ const validateBooleanString = value => {
   return validValues.includes(value);
 };
 
-const doubleModes = ["success", "fail", "update", "single", ""];
+const doubleModes = ["success", "fail", "update", "single", "updateMany", ""];
 const validateDoubleMode = value => {
   return doubleModes.includes(value);
 };
@@ -28,8 +29,10 @@ const validateFields = value => {
 };
 
 const validateDateTime = value => {
-  const result = Date.parse(value);
-  return !Number.isNaN(result);
+  if (!validateString(value)) {
+    return false;
+  }
+  return isISO8601(value);
 };
 
 const validationFields = {
@@ -60,6 +63,14 @@ const validationFields = {
   before: {
     function: validateDateTime,
     message: "before option must be date of format 'yyyy-MM-ddTHH:mm:ssZ'"
+  },
+  newForLA: {
+    function: validateBooleanString,
+    message: "newForLA option must be a boolean"
+  },
+  newForUV: {
+    function: validateBooleanString,
+    message: "newForUV option must be a boolean"
   }
 };
 
