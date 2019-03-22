@@ -84,15 +84,21 @@ const doubleResponse = [
   }
 ];
 
-const updateResponse = { fsa_rn: "1234", collected: true };
+const updateResponse = [
+  { fsa_rn: "1234", collected: true },
+  { fsa_rn: "5678", collected: true },
+  { fsa_rn: "9012", collected: true }
+];
 
 const registrationDbDouble = double_mode => {
   if (double_mode === "success") {
     return doubleResponse;
   } else if (double_mode === "fail") {
     throw new Error("Registration DB double, double mode is set to 'fail'");
-  } else if (double_mode === "update") {
+  } else if (double_mode === "updateMany") {
     return updateResponse;
+  } else if (double_mode === "update") {
+    return updateResponse[0];
   } else if (double_mode === "single") {
     return doubleResponse[0];
   } else {
