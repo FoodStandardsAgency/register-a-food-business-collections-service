@@ -1,7 +1,10 @@
 const {
+  getAllRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
+  updateRegistrationCollectedByUnified,
+  updateAllRegistrationsCollectedByUnified
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const { validateOptions } = require("./registrations.service");
@@ -75,6 +78,107 @@ const getRegistration = async options => {
   }
 };
 
+const getRegistrations = async options => {
+  logEmitter.emit(
+    "functionCall",
+    "registrations.controller",
+    "getRegistrations"
+  );
+
+  const validationResult = validateOptions(options);
+
+  if (validationResult === true) {
+    if (options.double_mode) {
+      return registrationDbDouble(options.double_mode);
+    }
+
+    const registrations = await getAllRegistrations(
+      options.newForLA,
+      options.newForUV,
+      options.before,
+      ["establishment", "metadata"]
+    );
+    logEmitter.emit(
+      "functionSuccess",
+      "registrations.controller",
+      "getRegistrations"
+    );
+    return registrations;
+  } else {
+    const error = new Error("");
+    error.name = "optionsValidationError";
+    error.rawError = validationResult;
+    throw error;
+  }
+};
+
+const updateRegistrationForUnified = async options => {
+  logEmitter.emit(
+    "functionCall",
+    "registrations.controller",
+    "updateRegistrationForUnified"
+  );
+
+  const validationResult = validateOptions(options);
+
+  if (validationResult === true) {
+    if (options.double_mode) {
+      return registrationDbDouble(options.double_mode);
+    }
+
+    const response = await updateRegistrationCollectedByUnified(
+      options.fsa_rn,
+      options.collected
+    );
+
+    logEmitter.emit(
+      "functionSuccess",
+      "registrations.controller",
+      "updateRegistrationForUnified"
+    );
+    return response;
+  } else {
+    const error = new Error("");
+    error.name = "optionsValidationError";
+    error.rawError = validationResult;
+    throw error;
+  }
+};
+
+const updateAllRegistrationsForUnified = async options => {
+  logEmitter.emit(
+    "functionCall",
+    "registrations.controller",
+    "updateAllRegistrationsForUnified"
+  );
+
+  const validationResult = validateOptions(options);
+
+  if (validationResult === true) {
+    if (options.double_mode){
+      return registrationDbDouble(options.double_mode);
+    }
+
+    const response = await updateAllRegistrationsCollectedByUnified(
+      options.newForLA,
+      options.newForUV,
+      options.before
+    );
+
+    logEmitter.emit(
+      "functionSuccess",
+      "registrations.controller",
+      "updateAllRegistrationsForUnified"
+    );
+    return response;
+  } else {
+    const error = new Error("");
+    error.name = "optionsValidationError";
+    error.rawError = validationResult;
+    throw error;
+  }
+};
+
 const updateRegistration = async options => {
   logEmitter.emit(
     "functionCall",
@@ -111,7 +215,10 @@ const updateRegistration = async options => {
 };
 
 module.exports = {
+  getRegistrations,
   getRegistrationsByCouncil,
   getRegistration,
-  updateRegistration
+  updateRegistration,
+  updateRegistrationForUnified,
+  updateAllRegistrationsForUnified
 };
