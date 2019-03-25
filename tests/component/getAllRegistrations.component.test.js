@@ -2,9 +2,9 @@ require("dotenv").config();
 const request = require("request-promise-native");
 
 const baseUrl = process.env.COMPONENT_TEST_BASE_URL || "http://localhost:4001";
-const url = `${baseUrl}/api/registrations/cardiff`;
+const url = `${baseUrl}/api/registrations/all`;
 
-describe("GET to /api/registrations/:lc", () => {
+describe("GET to /api/registrations/all", () => {
   describe("Given no extra parameters", () => {
     let response;
     beforeEach(async () => {
@@ -16,16 +16,16 @@ describe("GET to /api/registrations/:lc", () => {
       response = await request(requestOptions);
     });
 
-    it("should return all the new registrations for that council", () => {
-      expect(response.length).toBe(1);
+    it("should return all the new registrations", () => {
+      expect(response.length).toBe(2);
     });
   });
 
-  describe("Given invalid parameters", () => {
+  describe("Given invalid newForUV parameters", () => {
     let response;
     beforeEach(async () => {
       const requestOptions = {
-        uri: `${url}?new=alskdfj`,
+        uri: `${url}?newForUV=alskdfj`,
         json: true
       };
       try {
@@ -34,7 +34,6 @@ describe("GET to /api/registrations/:lc", () => {
         response = err;
       }
     });
-
     it("should return the options validation error", () => {
       expect(response.statusCode).toBe(400);
       expect(response.error.errorCode).toBe("3");
@@ -44,41 +43,51 @@ describe("GET to /api/registrations/:lc", () => {
     });
   });
 
-  describe("Given no 'fields' parameter", () => {
+  describe("Given invalid newForLA parameters", () => {
     let response;
     beforeEach(async () => {
       const requestOptions = {
-        uri: url,
+        uri: `${url}?newForLA=alskdfj`,
         json: true
       };
-      response = await request(requestOptions);
+      try {
+        await request(requestOptions);
+      } catch (err) {
+        response = err;
+      }
     });
-
-    it("should return on the summary information for the registrations", () => {
-      expect(response[0].establishment).toEqual({});
-      expect(response[0].metadata).toEqual({});
+    it("should return the options validation error", () => {
+      expect(response.statusCode).toBe(400);
+      expect(response.error.errorCode).toBe("3");
+      expect(response.error.developerMessage).toBe(
+        "One of the supplied options is invalid"
+      );
     });
   });
 
-  describe("Given 'fields' parameter", () => {
+  describe("Given invalid newForUV parameters", () => {
     let response;
     beforeEach(async () => {
       const requestOptions = {
-        uri: `${url}?fields=establishment,metadata`,
+        uri: `${url}?newForUV=alskdfj`,
         json: true
       };
-      response = await request(requestOptions);
+      try {
+        await request(requestOptions);
+      } catch (err) {
+        response = err;
+      }
     });
-
-    it("should return all the new registrations for that council", () => {
-      expect(
-        response[0].establishment.establishment_trading_name
-      ).toBeDefined();
-      expect(response[0].metadata.declaration1).toBeDefined();
+    it("should return the options validation error", () => {
+      expect(response.statusCode).toBe(400);
+      expect(response.error.errorCode).toBe("3");
+      expect(response.error.developerMessage).toBe(
+        "One of the supplied options is invalid"
+      );
     });
   });
 
-  describe("Given 'new=false' parameter", () => {
+  describe("Given 'newForUV=false' parameter", () => {
     let response;
     beforeEach(async () => {
       const requestOptions = {
@@ -89,7 +98,7 @@ describe("GET to /api/registrations/:lc", () => {
     });
 
     it("should return all the registrations for the council", () => {
-      expect(response.length).toBe(1);
+      expect(response.length).toBe(2);
     });
   });
 
