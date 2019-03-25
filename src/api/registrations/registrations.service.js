@@ -14,7 +14,16 @@ const validateBooleanString = value => {
   return validValues.includes(value);
 };
 
-const doubleModes = ["success", "fail", "update", "single", "updateMany", ""];
+const doubleModes = [
+  "success",
+  "fail",
+  "update",
+  "single",
+  "updateMany",
+  "updateUnified",
+  "updateUnifiedMany",
+  ""
+];
 const validateDoubleMode = value => {
   return doubleModes.includes(value);
 };
