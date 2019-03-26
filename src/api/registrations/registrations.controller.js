@@ -155,7 +155,7 @@ const updateAllRegistrationsForUnified = async options => {
   const validationResult = validateOptions(options);
 
   if (validationResult === true) {
-    if (options.double_mode){
+    if (options.double_mode) {
       return registrationDbDouble(options.double_mode);
     }
 
