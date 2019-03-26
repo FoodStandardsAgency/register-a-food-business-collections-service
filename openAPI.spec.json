@@ -28,6 +28,167 @@
     }
   ],
   "paths": {
+    "/all": {
+      "get": {
+        "description": "Returns all registrations ",
+        "operationId": "collect-all-registrations",
+        "summary": "Collect ALL registrations",
+        "parameters": [
+          {
+            "name": "newForLA",
+            "in": "query",
+            "description": "Flag to return new registrations for Local Authority (default false)",
+            "type": "boolean",
+            "enum": ["true", "false"]
+          },
+          {
+            "name": "newForUV",
+            "in": "query",
+            "description": "Flag to return new registrations for Unified View (default true)",
+            "type": "boolean",
+            "enum": ["true", "false"]
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "description": "Return registrations before ISO formatted date time (UTC)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "double-mode",
+            "in": "header",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "type": "string",
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfRegistrations"
+            }
+          },
+          "400": {
+            "description": "Bad request, invalid options"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "description": "Updates all registrations as Unified View Collected",
+        "operationId": "update-all-registrations-unified-view",
+        "summary": "Updates ALL registrations",
+        "parameters": [
+          {
+            "name": "newForLA",
+            "in": "query",
+            "description": "Flag to mark as collected new registrations for Local Authority (default false)",
+            "required": false,
+            "type": "boolean",
+            "enum": ["true", "false"]
+          },
+          {
+            "name": "newForUV",
+            "in": "query",
+            "description": "Flag to mark as collected new registrations for Unified View (default true)",
+            "required": false,
+            "type": "boolean",
+            "enum": ["true", "false"]
+          },
+          {
+            "name": "before",
+            "in": "query",
+            "description": "Mark as collected registrations before ISO formatted date time (UTC)",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "double-mode",
+            "in": "header",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "type": "string",
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/ArrayOfUpdates"
+            }
+          },
+          "400": {
+            "description": "Bad request, invalid options"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/all/{fsa_rn}": {
+      "put": {
+        "description": "Updates single registration as Unified View Collected",
+        "operationId": "update-single-registrations-unified-view",
+        "summary": "Updates single registration",
+        "parameters": [
+          {
+            "name": "fsa_rn",
+            "in": "path",
+            "description": "The reference number for the registration to be retrieved",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "collected",
+            "in": "body",
+            "description": "The flag to mark the registration with",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "collected": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          {
+            "name": "double-mode",
+            "in": "header",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "type": "string",
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/unifiedUpdate"
+            }
+          },
+          "400": {
+            "description": "Bad request, invalid options"
+          },
+          "404": {
+            "description": "Resource not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
     "/{lc}": {
       "get": {
         "description": "Returns all registrations for the given council.",
@@ -60,9 +221,9 @@
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the applcation against an in memory double rather than the real DB",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
             "type": "string",
-            "enum": ["success", "fail", "single", "update"]
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
           }
         ],
         "responses": {
@@ -105,9 +266,9 @@
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the applcation against an in memory double rather than the real DB",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
             "type": "string",
-            "enum": ["success", "fail", "single", "update"]
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
           }
         ],
         "responses": {
@@ -148,9 +309,9 @@
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the applcation against an in memory double rather than the real DB",
+            "description": "Optional string to run the application against an in memory double rather than the real DB",
             "type": "string",
-            "enum": ["success", "fail", "single", "update"]
+            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
           },
           {
             "name": "collected",
@@ -195,6 +356,23 @@
     }
   },
   "definitions": {
+    "ArrayOfUpdates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/unifiedUpdate"
+      }
+    },
+    "unifiedUpdate": {
+      "type":"object",
+      "properties": {
+        "fsa_rn": {
+          "type": "string"
+        },
+        "unified_view_collected": {
+          "type": "boolean"
+        }
+      }
+    },
     "ArrayOfRegistrations": {
       "type": "array",
       "items": {
