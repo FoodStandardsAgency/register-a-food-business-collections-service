@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       operator_first_name: { type: DataTypes.STRING },
       operator_last_name: { type: DataTypes.STRING },
       operator_postcode: { type: DataTypes.STRING },
+      operator_uprn: { type: DataTypes.STRING },
       operator_first_line: { type: DataTypes.STRING },
       operator_street: { type: DataTypes.STRING },
       operator_town: { type: DataTypes.STRING },
@@ -24,8 +25,7 @@ module.exports = (sequelize, DataTypes) => {
       contact_representative_name: { type: DataTypes.STRING },
       contact_representative_role: { type: DataTypes.STRING },
       contact_representative_number: { type: DataTypes.STRING },
-      contact_representative_email: { type: DataTypes.STRING },
-      operator_uprn: { type: DataTypes.STRING }
+      contact_representative_email: { type: DataTypes.STRING }
     },
     {}
   );
