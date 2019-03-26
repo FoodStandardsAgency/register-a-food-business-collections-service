@@ -19,7 +19,6 @@ const doubleModes = [
   "fail",
   "update",
   "single",
-  "updateMany",
   "updateUnified",
   "updateUnifiedMany",
   ""

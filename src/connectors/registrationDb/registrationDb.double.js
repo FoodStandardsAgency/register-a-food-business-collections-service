@@ -97,7 +97,7 @@ const registrationDbDouble = double_mode => {
   } else if (double_mode === "fail") {
     throw new Error("Registration DB double, double mode is set to 'fail'");
   } else if (double_mode === "update") {
-    return updateResponse[0];
+    return updateResponse;
   } else if (double_mode === "updateUnified") {
     return updateUnifiedResponse[0];
   } else if (double_mode === "updateUnifiedMany") {

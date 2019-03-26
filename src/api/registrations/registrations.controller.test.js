@@ -241,11 +241,14 @@ describe("registrations.controller", () => {
           newForLA: true,
           newForUV: true,
           before: "2019-01-01",
-          double_mode: "updateMany"
+          double_mode: "updateUnifiedMany"
         });
       });
       it("Should return the double response", () => {
-        expect(result[0]).toEqual({ fsa_rn: "1234", collected: true });
+        expect(result[0]).toEqual({
+          fsa_rn: "1234",
+          unified_view_collected: true
+        });
       });
     });
     describe("When successful", () => {
