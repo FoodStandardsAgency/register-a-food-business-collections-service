@@ -14,15 +14,7 @@ const validateBooleanString = value => {
   return validValues.includes(value);
 };
 
-const doubleModes = [
-  "success",
-  "fail",
-  "update",
-  "single",
-  "updateUnified",
-  "updateUnifiedMany",
-  ""
-];
+const doubleModes = ["success", "fail", "update", "single", ""];
 const validateDoubleMode = value => {
   return doubleModes.includes(value);
 };
@@ -42,6 +34,8 @@ const validateDateTime = value => {
   }
   return isISO8601(value);
 };
+
+const dateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
 
 const validationFields = {
   council: {
@@ -70,15 +64,11 @@ const validationFields = {
   },
   before: {
     function: validateDateTime,
-    message: "before option must be date of format 'yyyy-MM-ddTHH:mm:ssZ'"
+    message: `before option must follow the format '${dateTimeFormat}}'`
   },
-  newForLA: {
-    function: validateBooleanString,
-    message: "newForLA option must be a boolean"
-  },
-  newForUV: {
-    function: validateBooleanString,
-    message: "newForUV option must be a boolean"
+  after: {
+    function: validateDateTime,
+    message: `after option must follow the format '${dateTimeFormat}'`
   }
 };
 
