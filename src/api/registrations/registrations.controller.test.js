@@ -3,9 +3,7 @@ jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
   getUnifiedRegistrations: jest.fn(),
   getSingleRegistration: jest.fn(),
   updateRegistrationCollectedByCouncil: jest.fn(),
-  updateAllRegistrationsCollectedByUnified: jest.fn(),
   registrationDbDouble: jest.fn(),
-  updateRegistrationCollectedByUnified: jest.fn()
 }));
 
 jest.mock("./registrations.service");
