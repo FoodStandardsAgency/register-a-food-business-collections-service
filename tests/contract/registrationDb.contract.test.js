@@ -4,9 +4,7 @@ const {
   getRegistrationsByCouncil,
   getRegistration,
   getRegistrations,
-  updateRegistration,
-  updateRegistrationForUnified,
-  updateAllRegistrationsForUnified
+  updateRegistration
 } = require("../../src/api/registrations/registrations.controller");
 
 const { closeConnection } = require("../../src/db/db");
@@ -89,11 +87,14 @@ describe("registrationDb.connector integration: getSingleRegistrations", () => {
 
 describe("registrationDb.connector integration: getRegistrations", () => {
   beforeEach(async () => {
+    const before = new Date();
+    let after = new Date();
+    after.setDate(after.getDate() - 5);
+
     doubleResult = await getRegistrations({ double_mode: "success" });
     realResult = await getRegistrations({
-      newForUV: "true",
-      newForLA: "false",
-      before: "2019-04-01T15:00:00"
+      before: before.toISOString(),
+      after: after.toISOString()
     });
   });
 
@@ -144,49 +145,5 @@ describe("registrationDb.connector integration: updateRegistrationCollected", ()
     expect(realResult.collected).toBeDefined();
     expect(doubleResult.fsa_rn).toBeDefined();
     expect(doubleResult.collected).toBeDefined();
-  });
-});
-
-describe("registrationDb.connector integration: updateRegistrationCollectedByUnified", () => {
-  beforeEach(async () => {
-    doubleResult = await updateRegistrationForUnified({
-      double_mode: "updateUnified"
-    });
-    const realSummaryResult = await getRegistrationsByCouncil({
-      council: "the-vale-of-glamorgan"
-    });
-    realResult = await updateRegistrationForUnified({
-      fsa_rn: realSummaryResult[0].fsa_rn,
-      collected: true
-    });
-  });
-
-  it("Should return the update response", async () => {
-    expect(realResult.fsa_rn).toBeDefined();
-    expect(realResult.unified_view_collected).toBeDefined();
-    expect(doubleResult.fsa_rn).toBeDefined();
-    expect(doubleResult.unified_view_collected).toBeDefined();
-  });
-});
-
-describe("registrationDb.connector integration: updateAllRegistrationsCollectedByUnified", () => {
-  beforeEach(async () => {
-    doubleResult = await updateAllRegistrationsForUnified({
-      double_mode: "updateUnifiedMany"
-    });
-    realResult = await updateAllRegistrationsForUnified({
-      newForLA: "true",
-      newForUV: "true",
-      before: "2019-04-01T15:00:00"
-    });
-  });
-
-  it("Should return the updates responses", async () => {
-    expect(Array.isArray(realResult)).toBe(true);
-    expect(realResult[0].fsa_rn).toBeDefined();
-    expect(realResult[0].unified_view_collected).toBeDefined();
-    expect(Array.isArray(doubleResult)).toBe(true);
-    expect(doubleResult[0].fsa_rn).toBeDefined();
-    expect(doubleResult[0].unified_view_collected).toBeDefined();
   });
 });
