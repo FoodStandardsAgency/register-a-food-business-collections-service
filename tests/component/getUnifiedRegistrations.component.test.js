@@ -51,6 +51,35 @@ describe("GET to /api/registrations/unified", () => {
     });
   });
 
+  describe("Given before and after range greater than 7 days", () => {
+    let response;
+    beforeEach(async () => {
+      const before = new Date();
+      let after = new Date();
+      after.setDate(after.getDate() - 8);
+
+      const requestOptions = {
+        uri: `${url}?before=${before
+          .toISOString()
+          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        json: true
+      };
+      try {
+        await request(requestOptions);
+      } catch (err) {
+        response = err;
+      }
+    });
+
+    it("should return the options validation error", () => {
+      expect(response.statusCode).toBe(400);
+      expect(response.error.errorCode).toBe("3");
+      expect(response.error.developerMessage).toBe(
+        "One of the supplied options is invalid"
+      );
+    });
+  });
+
   describe("Given no parameters", () => {
     let response;
     beforeEach(async () => {
