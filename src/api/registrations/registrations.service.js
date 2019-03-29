@@ -28,6 +28,14 @@ const validateFields = value => {
   return value.every(val => allowedFields.includes(val));
 };
 
+const dateRange = (afterValue, beforeValue) => {
+  const after = new Date(afterValue);
+  let before = new Date(beforeValue);
+  before.setDate(before.getDate() - 7);
+
+  return !(before > after);
+}
+
 const validateDateTime = value => {
   if (!validateString(value)) {
     return false;
@@ -69,6 +77,9 @@ const validationFields = {
   after: {
     function: validateDateTime,
     message: `after option must follow the format '${dateTimeFormat}'`
+  },
+  dateRange: {
+    message: "range between before and after options must be less than 7 days"
   }
 };
 
@@ -78,14 +89,16 @@ const validateOptions = options => {
   for (const key in options) {
     // Check if the validation function for each key returns true or false for the associated value
     if (!validationFields[key].function(options[key])) {
-      logEmitter.emit(
-        "functionFail",
-        "registrations.service",
-        "validateOptions",
-        new Error(validationFields[key].message)
-      );
-      return validationFields[key].message;
+      return raiseValidationError(validationFields[key].message);
     }
+  }
+
+  if (
+    options.before &&
+    options.after &&
+    !dateRange(options.after, options.before)
+  ) {
+      return raiseValidationError(validationFields["dateRange"].message);
   }
   logEmitter.emit(
     "functionSuccess",
@@ -93,6 +106,16 @@ const validateOptions = options => {
     "validateOptions"
   );
   return true;
+};
+
+const raiseValidationError = message => {
+  logEmitter.emit(
+    "functionFail",
+    "registrations.service",
+    "validateOptions",
+    new Error(message)
+  );
+  return message;
 };
 
 module.exports = { validateOptions };
