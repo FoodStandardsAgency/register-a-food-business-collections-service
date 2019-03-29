@@ -1,6 +1,6 @@
 jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
   getAllRegistrationsByCouncil: jest.fn(),
-  getAllRegistrations: jest.fn(),
+  getUnifiedRegistrations: jest.fn(),
   getSingleRegistration: jest.fn(),
   updateRegistrationCollectedByCouncil: jest.fn(),
   updateAllRegistrationsCollectedByUnified: jest.fn(),
@@ -15,19 +15,15 @@ const { validateOptions } = require("./registrations.service");
 const {
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  getAllRegistrations,
-  updateRegistrationCollectedByCouncil,
-  updateRegistrationCollectedByUnified,
-  updateAllRegistrationsCollectedByUnified
+  getUnifiedRegistrations,
+  updateRegistrationCollectedByCouncil
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const {
   getRegistrationsByCouncil,
   getRegistration,
   getRegistrations,
-  updateRegistration,
-  updateAllRegistrationsForUnified,
-  updateRegistrationForUnified
+  updateRegistration
 } = require("./registrations.controller");
 
 describe("registrations.controller", () => {
@@ -174,7 +170,7 @@ describe("registrations.controller", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => false);
         try {
-          await getRegistrations({ newForLA: "true" });
+          await getRegistrations({ before: "true" });
         } catch (err) {
           result = err;
         }
@@ -188,9 +184,8 @@ describe("registrations.controller", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
         result = await getRegistrations({
-          newForLA: false,
-          newForUV: true,
           before: "2019-01-01",
+          after: "2019-02-01",
           double_mode: "success"
         });
       });
@@ -201,129 +196,19 @@ describe("registrations.controller", () => {
     describe("When successful", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        getAllRegistrations.mockImplementation(() => [
+        getUnifiedRegistrations.mockImplementation(() => [
           {
             fsa_rn: "5768",
             collected: true
           }
         ]);
         result = await getRegistrations({
-          newForLA: false,
-          newForUV: true,
-          before: "2019-01-01"
+          before: "2019-01-01",
+          after: "2019-02-01"
         });
       });
-      it("Should return the response of updateRegistrationCollected", () => {
+      it("Should return the response", () => {
         expect(result).toEqual([{ fsa_rn: "5768", collected: true }]);
-      });
-    });
-  });
-
-  describe("Function: updateAllRegisatrationsForUnified", () => {
-    describe("When given invalid option", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => false);
-        try {
-          await updateAllRegistrationsForUnified({ newForUV: "true" });
-        } catch (err) {
-          result = err;
-        }
-      });
-
-      it("should bubble up the error", () => {
-        expect(result.name).toBe("optionsValidationError");
-      });
-    });
-    describe("When given double mode", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => true);
-        result = await updateAllRegistrationsForUnified({
-          newForLA: true,
-          newForUV: true,
-          before: "2019-01-01",
-          double_mode: "updateUnifiedMany"
-        });
-      });
-      it("Should return the double response", () => {
-        expect(result[0]).toEqual({
-          fsa_rn: "1234",
-          unified_view_collected: true
-        });
-      });
-    });
-    describe("When successful", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => true);
-        updateAllRegistrationsCollectedByUnified.mockImplementation(() => [
-          {
-            fsa_rn: "5768",
-            unified_view_collected: true
-          }
-        ]);
-        result = await updateAllRegistrationsForUnified({
-          newForLA: true,
-          newForUV: true,
-          before: "2019-01-01"
-        });
-      });
-      it("Should return the response of updateRegistrationCollected", () => {
-        expect(result).toEqual([
-          {
-            fsa_rn: "5768",
-            unified_view_collected: true
-          }
-        ]);
-      });
-    });
-  });
-
-  describe("Function: updateRegistrationForUnified", () => {
-    describe("When given invalid option", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => false);
-        try {
-          await updateRegistrationForUnified({ newForUV: "true" });
-        } catch (err) {
-          result = err;
-        }
-      });
-
-      it("should bubble up the error", () => {
-        expect(result.name).toBe("optionsValidationError");
-      });
-    });
-    describe("When given double mode", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => true);
-        result = await updateRegistrationForUnified({
-          newForLA: true,
-          newForUV: true,
-          before: "2019-01-01",
-          double_mode: "update"
-        });
-      });
-      it("Should return the double response", () => {
-        expect(result).toEqual({ fsa_rn: "1234", collected: true });
-      });
-    });
-    describe("When successful", () => {
-      beforeEach(async () => {
-        validateOptions.mockImplementation(() => true);
-        updateRegistrationCollectedByUnified.mockImplementation(() => ({
-          fsa_rn: "5768",
-          unified_view_collected: true
-        }));
-        result = await updateRegistrationForUnified({
-          newForLA: true,
-          newForUV: true,
-          before: "2019-01-01"
-        });
-      });
-      it("Should return the response of updateRegistrationCollected", () => {
-        expect(result).toEqual({
-          fsa_rn: "5768",
-          unified_view_collected: true
-        });
       });
     });
   });
