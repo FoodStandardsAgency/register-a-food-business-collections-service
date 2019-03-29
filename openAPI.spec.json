@@ -28,184 +28,72 @@
     }
   ],
   "paths": {
-    "/all": {
+    "/unified": {
       "get": {
-        "description": "Returns all registrations ",
-        "operationId": "collect-all-registrations",
-        "summary": "Collect ALL registrations",
+        "description": "Returns registrations from all local authorities for Unified View. Results are filtered according to the supplied date/time range.",
+        "operationId": "get-registrations-for-unified-view",
+        "summary": "Get registrations for Unified View.",
         "parameters": [
           {
-            "name": "newForLA",
+            "name": "after",
             "in": "query",
-            "description": "Flag to return new registrations for Local Authority (default false)",
-            "type": "boolean",
-            "enum": ["true", "false"]
-          },
-          {
-            "name": "newForUV",
-            "in": "query",
-            "description": "Flag to return new registrations for Unified View (default true)",
-            "type": "boolean",
-            "enum": ["true", "false"]
+            "description": "Filter registrations to those created/updated after an ISO formatted UTC date-time e.g. 2019-04-29T16:01:12Z.",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
           },
           {
             "name": "before",
             "in": "query",
-            "description": "Return registrations before ISO formatted date time (UTC)",
-            "required": false,
-            "type": "string"
+            "description": "Filter registrations to those created/updated before an ISO formatted UTC date-time e.g. 2019-04-30T16:01:12Z.",
+            "required": true,
+            "type": "string",
+            "format": "date-time"
           },
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "description": "Return a hard-coded test result according to the value specified instead of querying the database.",
             "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+            "enum": ["success", "fail", "single", "update"]
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK.",
             "schema": {
               "$ref": "#/definitions/ArrayOfRegistrations"
             }
           },
           "400": {
-            "description": "Bad request, invalid options"
+            "description": "Bad request, invalid options."
           },
           "404": {
-            "description": "Resource not found"
+            "description": "Resource not found."
           },
           "500": {
-            "description": "Internal server error"
-          }
-        }
-      },
-      "put": {
-        "description": "Updates all registrations as Unified View Collected",
-        "operationId": "update-all-registrations-unified-view",
-        "summary": "Updates ALL registrations",
-        "parameters": [
-          {
-            "name": "newForLA",
-            "in": "query",
-            "description": "Flag to mark as collected new registrations for Local Authority (default false)",
-            "required": false,
-            "type": "boolean",
-            "enum": ["true", "false"]
-          },
-          {
-            "name": "newForUV",
-            "in": "query",
-            "description": "Flag to mark as collected new registrations for Unified View (default true)",
-            "required": false,
-            "type": "boolean",
-            "enum": ["true", "false"]
-          },
-          {
-            "name": "before",
-            "in": "query",
-            "description": "Mark as collected registrations before ISO formatted date time (UTC)",
-            "required": false,
-            "type": "string"
-          },
-          {
-            "name": "double-mode",
-            "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
-            "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/ArrayOfUpdates"
-            }
-          },
-          "400": {
-            "description": "Bad request, invalid options"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
-          }
-        }
-      }
-    },
-    "/all/{fsa_rn}": {
-      "put": {
-        "description": "Updates single registration as Unified View Collected",
-        "operationId": "update-single-registrations-unified-view",
-        "summary": "Updates single registration",
-        "parameters": [
-          {
-            "name": "fsa_rn",
-            "in": "path",
-            "description": "The reference number for the registration to be retrieved",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "name": "collected",
-            "in": "body",
-            "description": "The flag to mark the registration with",
-            "schema": {
-              "type": "object",
-              "properties": {
-                "collected": {
-                  "type": "boolean"
-                }
-              }
-            }
-          },
-          {
-            "name": "double-mode",
-            "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
-            "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "schema": {
-              "$ref": "#/definitions/unifiedUpdate"
-            }
-          },
-          "400": {
-            "description": "Bad request, invalid options"
-          },
-          "404": {
-            "description": "Resource not found"
-          },
-          "500": {
-            "description": "Internal server error"
+            "description": "Internal server error."
           }
         }
       }
     },
     "/{lc}": {
       "get": {
-        "description": "Returns all registrations for the given council.",
-        "operationId": "collect-all-registrations-for-council",
-        "summary": "Collect ALL registrations for council",
+        "description": "Returns registrations from the supplied local authority. By default, results are filtered to exclude data marked as collected.",
+        "operationId": "get-registrations-for-local-authority",
+        "summary": "Get registrations for local authority.",
         "parameters": [
           {
             "name": "lc",
             "in": "path",
-            "description": "The council name",
+            "description": "The local authority name.",
             "required": true,
             "type": "string"
           },
           {
             "name": "fields",
             "in": "query",
-            "description": "Extra fields to return as part of the response",
+            "description": "Extra fields to return as part of the response.",
             "type": "array",
             "items": {
               "type": "string"
@@ -214,109 +102,114 @@
           {
             "name": "new",
             "in": "query",
-            "description": "Flag to return only new registrations",
+            "description": "Filter registrations to those not yet marked as collected.",
             "type": "boolean",
+            "default": "true",
             "enum": ["true", "false"]
           },
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "description": "Return a hard-coded test result according to the value specified instead of querying the database.",
             "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+            "enum": ["success", "fail", "single", "update"]
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK.",
             "schema": {
               "$ref": "#/definitions/ArrayOfRegistrations"
             }
           },
           "400": {
-            "description": "Bad request, invalid options"
+            "description": "Bad request, invalid options."
           },
           "404": {
-            "description": "Resource not found"
+            "description": "Resource not found."
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error."
           }
         }
       }
     },
     "/{lc}/{fsa_rn}": {
       "get": {
-        "description": "Get a single registrations in full",
+        "description": "Returns a single registration in full from the supplied reference number.",
+        "operationId": "get-single-registration-for-local-authority",
+        "summary": "Get a single registration in full.",
         "parameters": [
           {
             "name": "lc",
             "in": "path",
-            "description": "The council name",
+            "description": "The local authority name.",
             "required": true,
             "type": "string"
           },
           {
             "name": "fsa_rn",
             "in": "path",
-            "description": "The reference number for the registration to be retrieved",
+            "description": "The reference number of the registration.",
             "required": true,
             "type": "string"
           },
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "description": "Return a hard-coded test result according to the value specified instead of querying the database.",
             "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+            "enum": ["success", "fail", "single", "update"]
           }
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK.",
             "schema": {
               "$ref": "#/definitions/Registration"
             }
           },
           "400": {
-            "description": "Bad request, invalid options"
+            "description": "Bad request, invalid options."
           },
           "404": {
-            "description": "Resource not found"
+            "description": "Resource not found."
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error."
           }
         }
       },
       "put": {
-        "description": "Update a single registrations with collected",
+        "description": "Updates a single registration according to the supplied reference number and collection status.",
+        "operationId": "update-single-registration-for-local-authority",
+        "summary": "Update the collected status of a single registration.",
         "parameters": [
           {
             "name": "lc",
             "in": "path",
-            "description": "The council name",
+            "description": "The local authority name.",
             "required": true,
             "type": "string"
           },
           {
             "name": "fsa_rn",
             "in": "path",
-            "description": "The reference number for the registration to be retrieved",
+            "description": "The reference number for the registration.",
             "required": true,
             "type": "string"
           },
           {
             "name": "double-mode",
             "in": "header",
-            "description": "Optional string to run the application against an in memory double rather than the real DB",
+            "description": "Return a hard-coded test result according to the value specified instead of querying the database.",
             "type": "string",
-            "enum": ["success", "fail", "single", "update", "updateUnified", "updateUnifiedMany"]
+            "enum": ["success", "fail", "single", "update"]
           },
           {
             "name": "collected",
             "in": "body",
-            "description": "The flag to mark the registration with",
+            "description": "The collection status with which to update the registration.",
             "schema": {
               "type": "object",
               "properties": {
@@ -329,7 +222,7 @@
         ],
         "responses": {
           "200": {
-            "description": "OK",
+            "description": "OK.",
             "schema": {
               "type": "object",
               "properties": {
@@ -343,36 +236,19 @@
             }
           },
           "400": {
-            "description": "Bad request, invalid options"
+            "description": "Bad request, invalid options."
           },
           "404": {
-            "description": "Resource not found"
+            "description": "Resource not found."
           },
           "500": {
-            "description": "Internal server error"
+            "description": "Internal server error."
           }
         }
       }
     }
   },
   "definitions": {
-    "ArrayOfUpdates": {
-      "type": "array",
-      "items": {
-        "$ref": "#/definitions/unifiedUpdate"
-      }
-    },
-    "unifiedUpdate": {
-      "type":"object",
-      "properties": {
-        "fsa_rn": {
-          "type": "string"
-        },
-        "unified_view_collected": {
-          "type": "boolean"
-        }
-      }
-    },
     "ArrayOfRegistrations": {
       "type": "array",
       "items": {
@@ -406,19 +282,19 @@
       "type": "string",
       "maximum": 20,
       "minimum": 20,
-      "description": "The unique reference number to identify this registration"
+      "description": "The unique reference number to identify this registration."
     },
     "council": {
       "type": "string",
-      "description": "The local council that the registration belongs to"
+      "description": "The local authority that the registration belongs to."
     },
     "collected": {
       "type": "boolean",
-      "description": "Flag indicating whether this registration has been collected by the council or not"
+      "description": "Flag indicating whether this registration has been collected by the local authority or not."
     },
     "collected_at": {
       "type": "string",
-      "description": "The date and time that the registration was collected"
+      "description": "The date and time that the registration was collected."
     },
     "Establishment": {
       "type": "object",
@@ -448,29 +324,29 @@
       "properties": {
         "establishment_trading_name": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "establishment_primary_number": {
           "type": "string",
           "minimum": 5,
           "maximum": 20,
-          "description": "Numeric string. Blank spaces and + allowed"
+          "description": "Numeric string. Blank spaces and + allowed."
         },
         "establishment_secondary_number": {
           "type": "string",
           "minimum": 5,
           "maximum": 20,
-          "description": "Numeric string. Blank spaces and + allowed"
+          "description": "Numeric string. Blank spaces and + allowed."
         },
         "establishment_email": {
           "type": "string",
           "maximum": 255,
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail."
         },
         "establishment_opening_date": {
           "type": "string",
-          "description": "Uses YYYY-MM-DD [npm Validator](https://www.npmjs.com/package/validator) isISO8601"
+          "description": "Uses YYYY-MM-DD [npm Validator](https://www.npmjs.com/package/validator) isISO8601."
         }
       }
     },
@@ -487,106 +363,106 @@
       "properties": {
         "operator_first_name": {
           "type": "string",
-          "description": "ASCII string - Required if operator_type is ''Sole trader'', ''Partnership'', or ''A person (registered by a representative)''",
+          "description": "ASCII string - Required if operator_type is Sole trader', 'Partnership', or A person (registered by a representative)'.",
           "maximum": 255
         },
         "operator_last_name": {
           "type": "string",
-          "description": "ASCII string - required if operator_type is ''Sole trader'', ''Partnership'', or ''A person (registered by a representative)''",
+          "description": "ASCII string - required if operator_type is 'Sole trader', 'Partnership', or A person (registered by a representative)'.",
           "maximum": 255
-        },
-        "partners": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Partner"
-          }
         },
         "operator_postcode": {
           "type": "string",
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)."
         },
         "operator_uprn": {
           "type": "string",
           "maximum": 12,
-          "description": "Unique Property Reference Number"
+          "description": "Unique Property Reference Number."
         },
         "operator_first_line": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "operator_street": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "operator_town": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "operator_primary_number": {
           "type": "string",
           "minimum": 5,
           "maximum": 20,
-          "description": "Numeric string. Blank spaces and + allowed"
+          "description": "Numeric string. Blank spaces and + allowed."
         },
         "operator_secondary_number": {
           "type": "string",
           "minimum": 5,
           "maximum": 20,
-          "description": "Numeric string. Blank spaces and + allowed"
+          "description": "Numeric string. Blank spaces and + allowed."
         },
         "operator_email": {
           "type": "string",
           "maximum": 255,
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail."
         },
         "contact_representative_name": {
           "type": "string",
-          "description": "ASCII string - requried if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'",
+          "description": "ASCII string - requried if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'.",
           "maximum": 255
         },
         "contact_representative_role": {
           "type": "string",
-          "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'",
+          "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'.",
           "maximum": 255
         },
         "contact_representative_number": {
           "type": "string",
-          "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'",
+          "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'.",
           "maximum": 255
         },
         "contact_representative_email": {
           "type": "string",
           "maximum": 255,
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
         },
         "operator_type": {
           "type": "string",
-          "description": "Possible values: 'Sole trader', 'Partnership', 'A person (registered by a representative)' 'A company (registered by a representative)' or 'A charity (registered by a representative)'"
+          "description": "Possible values: 'Sole trader', 'Partnership', 'A person (registered by a representative)' 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
         },
         "operator_company_name": {
           "type": "string",
           "maximum": 50,
-          "description": "Required if operator_type is 'A company (registered by a representative)'"
+          "description": "Required if operator_type is 'A company (registered by a representative)'."
         },
         "operator_company_house_number": {
           "type": "string",
           "maximum": 8,
           "minimum": 8,
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), first two characters can be letters - Required if operator_type is 'A company (registered by a representative)'"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), first two characters can be letters - Required if operator_type is 'A company (registered by a representative)'."
         },
         "operator_charity_name": {
           "type": "string",
           "maximum": 50,
-          "description": "Required if operator_type is 'A charity (registered by a representative)'"
+          "description": "Required if operator_type is 'A charity (registered by a representative)'."
         },
         "operator_charity_number": {
           "type": "string",
           "maximum": 8,
           "minimum": 6,
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), allows ''-'' -  Required if operator_type is 'A charity (registered by a representative)'"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), allows ''-'' -  Required if operator_type is 'A charity (registered by a representative)'."
+        },
+        "partners": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Partner"
+          }
         }
       }
     },
@@ -596,11 +472,11 @@
       "properties": {
         "partner_name": {
           "type": "string",
-          "description": "ASCII string"
+          "description": "ASCII string."
         },
         "partner_is_primary_contact": {
           "type": "boolean",
-          "description": "Flag indicating whether the partner is the primary contact"
+          "description": "Flag indicating whether the partner is the primary contact."
         }
       }
     },
@@ -614,31 +490,31 @@
       "properties": {
         "establishment_postcode": {
           "type": "string",
-          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)"
+          "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isPostalCode (GB)."
         },
         "establishment_uprn": {
           "type": "string",
           "maximum": 12,
-          "description": "Unique Property Reference Number"
+          "description": "Unique Property Reference Number."
         },
         "establishment_first_line": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "establishment_street": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "establishment_town": {
           "type": "string",
-          "description": "ASCII string",
+          "description": "ASCII string.",
           "maximum": 255
         },
         "establishment_type": {
           "type": "string",
-          "description": "Possible values: 'Place of business or commercial premises', 'Mobile or moveable premises', 'Home or domestic premises'"
+          "description": "Possible values: 'Place of business or commercial premises', 'Mobile or moveable premises', 'Home or domestic premises'."
         }
       }
     },
@@ -652,18 +528,18 @@
       "properties": {
         "customer_type": {
           "type": "string",
-          "description": "Possible values: 'Other businesses', 'End consumer', 'End consumer and other businesses'"
+          "description": "Possible values: 'Other businesses', 'End consumer', 'End consumer and other businesses'."
         },
         "business_type": {
           "type": "string",
-          "description": "Predetermined values, see separate document for full business type list"
+          "description": "Predetermined values, see separate document for full business type list."
         },
         "business_type_search_term": {
           "type": "string"
         },
         "import_export_activities": {
           "type": "string",
-          "description": "Possible values: 'Directly import', 'Directly export', 'Directly import and export', 'None'"
+          "description": "Possible values: 'Directly import', 'Directly export', 'Directly import and export', 'None'."
         },
         "business_other_details": {
           "type": "string",
