@@ -24,8 +24,6 @@ jest.mock("../../db/db", () => ({
   closeConnection: jest.fn()
 }));
 
-const { Op } = require("sequelize");
-
 const {
   Activities,
   Establishment,
@@ -36,12 +34,10 @@ const {
 } = require("../../db/db");
 
 const {
-  getAllRegistrations,
+  getUnifiedRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil,
-  updateRegistrationCollectedByUnified,
-  updateAllRegistrationsCollectedByUnified
+  updateRegistrationCollectedByCouncil
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -313,197 +309,6 @@ describe("collect.service", () => {
     });
   });
 
-  describe("Function: updateAllRegistrationsCollectedByUnified", () => {
-    var result;
-    describe("When Registration.update is successful", () => {
-      beforeEach(async () => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } }
-        ]);
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateAllRegistrationsCollectedByUnified(
-          true,
-          true,
-          "2019-01-01T15:00:00Z"
-        );
-      });
-
-      it("Should return fsa_rn and collected", () => {
-        expect(result).toEqual([
-          { fsa_rn: "1234", unified_view_collected: true }
-        ]);
-      });
-    });
-
-    describe("When collected values are true", () => {
-      beforeEach(async () => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } }
-        ]);
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateAllRegistrationsCollectedByUnified(
-          "true",
-          "true",
-          "2019-01-01T15:00:00Z"
-        );
-      });
-
-      it("should call registration.findAll with queryArray [false, null]", () => {
-        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
-          false
-        ]);
-        expect(
-          Registration.findAll.mock.calls[0][0].where.unified_view_collected
-        ).toEqual([false]);
-      });
-
-      it("Should pass collected to registration update", () => {
-        expect(
-          Registration.update.mock.calls[0][0].unified_view_collected
-        ).toBe(true);
-      });
-
-      it("Should pass fsa_rn to registration update", () => {
-        expect(Registration.update.mock.calls[0][1].where.fsa_rn).toBe("1234");
-      });
-    });
-
-    describe("When collected values are false", () => {
-      beforeEach(async () => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } }
-        ]);
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateAllRegistrationsCollectedByUnified(
-          true,
-          true,
-          "2019-01-01T15:00:00Z"
-        );
-      });
-
-      it("should call registration.findAll with queryArray [true, false, null]", () => {
-        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
-          true,
-          false
-        ]);
-        expect(
-          Registration.findAll.mock.calls[0][0].where.unified_view_collected
-        ).toEqual([true, false]);
-      });
-
-      it("Should pass collected to registration update", () => {
-        expect(
-          Registration.update.mock.calls[0][0].unified_view_collected
-        ).toBe(true);
-      });
-    });
-
-    describe("When a before date is not supplied", () => {
-      beforeEach(async () => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } }
-        ]);
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateAllRegistrationsCollectedByUnified(true, true);
-      });
-
-      it("Should call update with ISO date", () => {
-        expect(
-          isISO8601(
-            Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
-          )
-        ).toBe(true);
-      });
-    });
-
-    describe("When a before date is supplied", () => {
-      beforeEach(async () => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } }
-        ]);
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateAllRegistrationsCollectedByUnified(
-          true,
-          true,
-          "2019-01-01"
-        );
-      });
-
-      it("Should call update with the supplied date", () => {
-        expect(
-          Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
-        ).toBe("2019-01-01");
-      });
-    });
-  });
-
-  describe("Function: updateRegistrationCollectedByUnified", () => {
-    let result;
-    describe("When Registration.update is successful", () => {
-      beforeEach(async () => {
-        Registration.update.mockImplementation(() => [1]);
-        result = await updateRegistrationCollectedByUnified("1234", true);
-      });
-
-      it("Should return fsa_rn and collected", () => {
-        expect(result).toEqual({
-          fsa_rn: "1234",
-          unified_view_collected: true
-        });
-      });
-
-      it("Should pass collected to registration update", () => {
-        expect(
-          Registration.update.mock.calls[0][0].unified_view_collected
-        ).toBe(true);
-      });
-
-      it("Should pass fsa_rn to registration update", () => {
-        expect(Registration.update.mock.calls[0][1].where.fsa_rn).toBe("1234");
-      });
-
-      it("Should call update with ISO date", () => {
-        expect(
-          isISO8601(
-            Registration.update.mock.calls[0][0].unified_view_collected_at
-          )
-        ).toBe(true);
-      });
-    });
-
-    describe("When Registration.update throws an error", () => {
-      beforeEach(async () => {
-        Registration.update.mockImplementation(() => {
-          throw new Error("Failed");
-        });
-        try {
-          await updateRegistrationCollectedByUnified("1234", true);
-        } catch (err) {
-          result = err;
-        }
-      });
-
-      it("Should bubble the error up", () => {
-        expect(result.message).toBe("Failed");
-      });
-    });
-
-    describe("When Registration.update returns no results", () => {
-      beforeEach(async () => {
-        Registration.update.mockImplementation(() => [0]);
-        try {
-          await updateRegistrationCollectedByUnified("1234", true, "cardiff");
-        } catch (err) {
-          result = err;
-        }
-      });
-
-      it("Should bubble the error up", () => {
-        expect(result.name).toBe("updateRegistrationNotFoundError");
-      });
-    });
-  });
-
   describe("Function: getSingleRegistration", () => {
     let result;
     describe("when Registration.FindOne returns no results", () => {
@@ -569,128 +374,8 @@ describe("collect.service", () => {
     });
   });
 
-  describe("Function: getAllRegistrations", () => {
+  describe("Function: getUnifiedRegistrations", () => {
     let result;
-
-    describe("when collected inputs are true", () => {
-      beforeEach(() => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
-        ]);
-
-        Establishment.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_trading_name: "taco" }
-        }));
-        Operator.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { operator_name: "fred" }
-        }));
-        Activities.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { business_type: "cookies" }
-        }));
-        Premise.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
-        }));
-        Metadata.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { declaration1: "yes" }
-        }));
-        result = getAllRegistrations("true", "true", "2019-01-01T13:00:00Z");
-      });
-
-      it("should call registration.findAll with queryArray [false, null]", () => {
-        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
-          false
-        ]);
-        expect(
-          Registration.findAll.mock.calls[0][0].where.unified_view_collected
-        ).toEqual([false]);
-      });
-    });
-
-    describe("when collected inputs are false", () => {
-      beforeEach(() => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
-        ]);
-
-        Establishment.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_trading_name: "taco" }
-        }));
-        Operator.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { operator_name: "fred" }
-        }));
-        Activities.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { business_type: "cookies" }
-        }));
-        Premise.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
-        }));
-        Metadata.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { declaration1: "yes" }
-        }));
-        result = getAllRegistrations("false", "false", "2019-01-01T13:00:00Z");
-      });
-
-      it("should call registration.findAll with queryArray [true, false, null]", () => {
-        expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
-          true,
-          false
-        ]);
-        expect(
-          Registration.findAll.mock.calls[0][0].where.unified_view_collected
-        ).toEqual([true, false]);
-      });
-    });
-
-    describe("when date and time not provided", () => {
-      beforeEach(() => {
-        Registration.findAll.mockImplementation(() => [
-          { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
-        ]);
-
-        Establishment.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_trading_name: "taco" }
-        }));
-        Operator.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { operator_name: "fred" }
-        }));
-        Activities.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { business_type: "cookies" }
-        }));
-        Premise.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
-        }));
-        Metadata.findOne.mockImplementation(() => ({
-          id: 1,
-          dataValues: { declaration1: "yes" }
-        }));
-        result = getAllRegistrations("false", "false", null, []);
-      });
-
-      it("should call registration.findAll with a valid date time", () => {
-        expect(
-          isISO8601(
-            Registration.findAll.mock.calls[0][0].where.createdAt[Op.lte]
-          )
-        ).toBe(true);
-      });
-    });
 
     describe("when getAllRegistrations returns a result", () => {
       beforeEach(async () => {
@@ -699,7 +384,11 @@ describe("collect.service", () => {
           { id: 2, dataValues: { fsa_rn: "5678" } }
         ]);
 
-        result = await getAllRegistrations(true, true, "2019-01-01T13:00:00Z");
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
+          []
+        );
       });
 
       it("Should return two registrations", () => {
@@ -713,10 +402,9 @@ describe("collect.service", () => {
           { id: 1, dataValues: { fsa_rn: "1234" } },
           { id: 2, dataValues: { fsa_rn: "5678" } }
         ]);
-        result = await getAllRegistrations(
-          true,
-          true,
-          "2019-01-01T15:00:00Z",
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
           []
         );
       });
@@ -754,9 +442,12 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = await getAllRegistrations(true, true, "2019-01-01T15:00:00Z", [
-          "establishment"
-        ]);
+
+        result = await getUnifiedRegistrations(
+          "2019-01-01T15:00:00Z",
+          "2019-01-01T15:00:00Z",
+          ["establishment"]
+        );
       });
       it("should return just the establishment, operator, premise, activities fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
@@ -777,9 +468,11 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = await getAllRegistrations(true, true, "2019-01-01T15:00:00Z", [
-          "metadata"
-        ]);
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
+          ["metadata"]
+        );
       });
       it("should return just the metadata fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
@@ -795,7 +488,11 @@ describe("collect.service", () => {
         });
 
         try {
-          await getAllRegistrations(true, true);
+          result = await getUnifiedRegistrations(
+            "2019-01-01T13:00:00Z",
+            "2019-04-01T13:00:00Z",
+            []
+          );
         } catch (err) {
           result = err;
         }

@@ -106,11 +106,7 @@ const getRegistrationTableByCouncil = async (council, collected) => {
   }
 };
 
-const getRegistrationTable = async (
-  collected,
-  unified_view_collected,
-  before
-) => {
+const getRegistrationTable = async (before, after) => {
   logEmitter.emit(
     "functionCall",
     "registration.connector.js",
@@ -119,10 +115,9 @@ const getRegistrationTable = async (
   try {
     const response = await Registration.findAll({
       where: {
-        collected,
-        unified_view_collected,
         createdAt: {
-          [Op.lte]: before
+          [Op.lt]: before,
+          [Op.gte]: after
         }
       }
     });
@@ -216,30 +211,22 @@ const getFullRegistration = async (registration, fields = []) => {
   );
 };
 
-const getAllRegistrations = async (
-  newRegistrationsLC,
-  newRegistrationsUV,
+const getUnifiedRegistrations = async (
   registrationsBefore,
+  registrationsAfter,
   fields
 ) => {
   logEmitter.emit(
     "functionCall",
     "registrationsDb.connector",
-    "getAllRegistrations"
+    "getUnifiedRegistrations"
   );
 
   await connectToDb();
 
-  const councilArray = newRegistrationsLC === "true" ? [false] : [true, false];
-  const unifiedArray = newRegistrationsUV === "true" ? [false] : [true, false];
-  const beforeDate = registrationsBefore
-    ? registrationsBefore
-    : convertJSDateToISODate();
-
   const registrations = await getRegistrationTable(
-    councilArray,
-    unifiedArray,
-    beforeDate
+    registrationsBefore,
+    registrationsAfter
   );
 
   const registrationPromises = [];
@@ -251,7 +238,7 @@ const getAllRegistrations = async (
   logEmitter.emit(
     "functionSuccess",
     "registrationsDb.connector",
-    "getAllRegistrations"
+    "getUnifiedRegistrations"
   );
   return fullRegistrations;
 };
@@ -335,94 +322,9 @@ const updateRegistrationCollectedByCouncil = async (
   return { fsa_rn, collected };
 };
 
-const updateAllRegistrationsCollectedByUnified = async (
-  newRegistrationsLC,
-  newRegistrationsUV,
-  registrationsBefore
-) => {
-  logEmitter.emit(
-    "functionCall",
-    "registrationsDb.connector",
-    "updateAllRegistrationsCollectedByUnified"
-  );
-
-  await connectToDb();
-
-  const updatePromises = [];
-  const councilArray = newRegistrationsLC === "true" ? [false] : [true, false];
-  const unifiedArray = newRegistrationsUV === "true" ? [false] : [true, false];
-  const beforeDate = registrationsBefore
-    ? registrationsBefore
-    : convertJSDateToISODate();
-
-  const registrations = await getRegistrationTable(
-    councilArray,
-    unifiedArray,
-    beforeDate
-  );
-
-  registrations.forEach(registration => {
-    updatePromises.push(
-      updateRegistrationCollectedByUnified(registration.dataValues.fsa_rn, true)
-    );
-  });
-  const fullUpdates = await Promise.all(updatePromises);
-  logEmitter.emit(
-    "functionSuccess",
-    "registrationsDb.connector",
-    "updateAllRegistrationsCollectedByUnified"
-  );
-  return fullUpdates;
-};
-
-const updateRegistrationCollectedByUnified = async (
-  fsa_rn,
-  unified_view_collected
-) => {
-  logEmitter.emit(
-    "functionCall",
-    "registrationsDb.connector",
-    "updateRegistrationCollectedByUnified"
-  );
-
-  await connectToDb();
-  const isoDate = convertJSDateToISODate();
-  const response = await Registration.update(
-    {
-      unified_view_collected,
-      unified_view_collected_at: isoDate
-    },
-    {
-      where: {
-        fsa_rn
-      }
-    }
-  );
-
-  if (response[0] === 0) {
-    const error = new Error("updateRegistrationNotFoundError");
-    error.name = "updateRegistrationNotFoundError";
-    logEmitter.emit(
-      "functionFail",
-      "registrationsDb.connector",
-      "updateRegistrationCollectedByUnified",
-      error
-    );
-    throw error;
-  }
-  logEmitter.emit(
-    "functionSuccess",
-    "registrationsDb.connector",
-    "updateRegistrationCollectedByUnified"
-  );
-  return { fsa_rn, unified_view_collected };
-};
-
 module.exports = {
-  getAllRegistrations,
+  getUnifiedRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateAllRegistrationsCollectedByUnified,
-  updateRegistrationCollectedByCouncil,
-  updateRegistrationCollectedByUnified
+  updateRegistrationCollectedByCouncil
 };
