@@ -34,7 +34,7 @@ const dateRange = (afterValue, beforeValue) => {
   before.setDate(before.getDate() - 7);
 
   return !(before > after);
-}
+};
 
 const validateDateTime = value => {
   if (!validateString(value)) {
@@ -98,7 +98,7 @@ const validateOptions = options => {
     options.after &&
     !dateRange(options.after, options.before)
   ) {
-      return raiseValidationError(validationFields["dateRange"].message);
+    return raiseValidationError(validationFields["dateRange"].message);
   }
   logEmitter.emit(
     "functionSuccess",
