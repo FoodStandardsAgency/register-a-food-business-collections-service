@@ -86,11 +86,6 @@ const doubleResponse = [
 
 const updateResponse = { fsa_rn: "1234", collected: true };
 
-const updateUnifiedResponse = [
-  { fsa_rn: "1234", unified_view_collected: true },
-  { fsa_rn: "5678", unified_view_collected: true }
-];
-
 const registrationDbDouble = double_mode => {
   if (double_mode === "success") {
     return doubleResponse;
@@ -98,10 +93,6 @@ const registrationDbDouble = double_mode => {
     throw new Error("Registration DB double, double mode is set to 'fail'");
   } else if (double_mode === "update") {
     return updateResponse;
-  } else if (double_mode === "updateUnified") {
-    return updateUnifiedResponse[0];
-  } else if (double_mode === "updateUnifiedMany") {
-    return updateUnifiedResponse;
   } else if (double_mode === "single") {
     return doubleResponse[0];
   } else {
