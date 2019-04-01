@@ -144,13 +144,16 @@ describe("registrations.service", () => {
     });
 
     describe("When given valid before", () => {
-      beforeEach(() => {
-        const options = {
-          before: "2019-03-15T15:53:40Z"
-        };
-        result = validateOptions(options);
-      });
-      it("should return true", () => {
+      const validBefore = [
+        "2019-03-15T15:53:40Z",
+        "2019-03-15",
+        "2019-03-15T15:00:00.000",
+        "2020-02-29T00:01:02.132Z",
+        "2020-06-30 23:15:00"
+      ];
+
+      validBefore.forEach(before => {
+        result = validateOptions({ before });
         expect(result).toBe(true);
       });
     });
@@ -163,12 +166,37 @@ describe("registrations.service", () => {
         "false",
         null,
         undefined,
-        "thing"
+        "thing",
+        "2019-02-29T00:01:02.132Z",
+        "2020-02-30",
+        "2020-06-30 00:61:00",
+        "2020-06-30 7:1:8",
+        "20-6-1"
       ];
       invalidBefore.forEach(before => {
         result = validateOptions({ before });
         expect(result).not.toBe(true);
       });
+    });
+
+    describe("When given a valid range", () => {
+      const options = {
+        after: "2019-01-15T12:00:00",
+        before: "2019-01-22T12:00:00"
+      };
+
+      result = validateOptions(options);
+      expect(result).toBe(true);
+    });
+
+    describe("When given an invalid range", () => {
+      const options = {
+        after: "2019-01-15T12:00:00",
+        before: "2019-01-22T12:00:01"
+      };
+
+      result = validateOptions(options);
+      expect(result).not.toBe(true);
     });
   });
 });
