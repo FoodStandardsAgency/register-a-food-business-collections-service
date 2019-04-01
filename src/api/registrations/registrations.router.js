@@ -1,13 +1,47 @@
 const { Router } = require("express");
 const { logEmitter } = require("../../services/logging.service");
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
+  getRegistrations,
   updateRegistration
 } = require("./registrations.controller");
 
 const registrationsRouter = () => {
   const router = Router();
+
+  router.get("/unified", async (req, res, next) => {
+    logEmitter.emit(
+      "functionCall",
+      "registrations.router",
+      "GET /unified route"
+    );
+    try {
+      let registrations;
+      const options = {
+        double_mode: req.headers["double-mode"] || "",
+        after: req.query.after,
+        before: req.query.before
+      };
+
+      registrations = await getRegistrations(options);
+
+      logEmitter.emit(
+        "functionSuccess",
+        "registrations.router",
+        "GET /unified route"
+      );
+      res.send(registrations);
+    } catch (err) {
+      logEmitter.emit(
+        "functionFail",
+        "registrations.router",
+        "GET /unified route",
+        err
+      );
+      next(err);
+    }
+  });
 
   router.get("/:lc", async (req, res, next) => {
     logEmitter.emit("functionCall", "registrations.router", "/:lc route");
@@ -21,7 +55,7 @@ const registrationsRouter = () => {
         council: req.params.lc
       };
 
-      registrations = await getRegistrations(options);
+      registrations = await getRegistrationsByCouncil(options);
 
       logEmitter.emit(
         "functionSuccess",

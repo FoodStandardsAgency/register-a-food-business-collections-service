@@ -1,8 +1,9 @@
 require("dotenv").config();
 
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
+  getRegistrations,
   updateRegistration
 } = require("../../src/api/registrations/registrations.controller");
 
@@ -15,10 +16,10 @@ afterAll(() => {
   closeConnection();
 });
 
-describe("registrationDb.connector integration: getAllRegistrations", () => {
+describe("registrationDb.connector integration: getRegistrationsByCouncil", () => {
   beforeEach(async () => {
-    doubleResult = await getRegistrations({ double_mode: "success" });
-    realResult = await getRegistrations({
+    doubleResult = await getRegistrationsByCouncil({ double_mode: "success" });
+    realResult = await getRegistrationsByCouncil({
       council: "cardiff",
       fields: ["establishment", "metadata"]
     });
@@ -56,7 +57,9 @@ describe("registrationDb.connector integration: getAllRegistrations", () => {
 describe("registrationDb.connector integration: getSingleRegistrations", () => {
   beforeEach(async () => {
     doubleResult = await getRegistration({ double_mode: "single" });
-    const realSummaryResult = await getRegistrations({ council: "cardiff" });
+    const realSummaryResult = await getRegistrationsByCouncil({
+      council: "cardiff"
+    });
     realResult = await getRegistration({
       council: "cardiff",
       fsa_rn: realSummaryResult[0].fsa_rn
@@ -82,15 +85,58 @@ describe("registrationDb.connector integration: getSingleRegistrations", () => {
   });
 });
 
+describe("registrationDb.connector integration: getRegistrations", () => {
+  beforeEach(async () => {
+    const before = new Date();
+    let after = new Date();
+    after.setDate(after.getDate() - 5);
+
+    doubleResult = await getRegistrations({ double_mode: "success" });
+    realResult = await getRegistrations({
+      before: before.toISOString(),
+      after: after.toISOString()
+    });
+  });
+
+  it("Should return list of registrations", async () => {
+    expect(Array.isArray(realResult)).toBe(true);
+    expect(realResult[0].fsa_rn).toBeDefined();
+    expect(realResult[0].council).toBeDefined();
+    expect(
+      realResult[0].establishment.establishment_trading_name
+    ).toBeDefined();
+    expect(realResult[0].establishment.operator.operator_type).toBeDefined();
+    expect(realResult[0].establishment.activities.business_type).toBeDefined();
+    expect(
+      realResult[0].establishment.premise.establishment_type
+    ).toBeDefined();
+    expect(realResult[0].metadata.declaration1).toBeDefined();
+    expect(doubleResult[0].fsa_rn).toBeDefined();
+    expect(doubleResult[0].council).toBeDefined();
+    expect(
+      doubleResult[0].establishment.establishment_trading_name
+    ).toBeDefined();
+    expect(doubleResult[0].establishment.operator.operator_type).toBeDefined();
+    expect(
+      doubleResult[0].establishment.activities.business_type
+    ).toBeDefined();
+    expect(
+      doubleResult[0].establishment.premise.establishment_type
+    ).toBeDefined();
+    expect(doubleResult[0].metadata.declaration1).toBeDefined();
+  });
+});
+
 describe("registrationDb.connector integration: updateRegistrationCollected", () => {
   beforeEach(async () => {
     doubleResult = await updateRegistration({ double_mode: "update" });
-    const realSummaryResult = await getRegistrations({
+    const realSummaryResult = await getRegistrationsByCouncil({
       council: "the-vale-of-glamorgan"
     });
-    realResult = await getRegistration({
+    realResult = await updateRegistration({
       council: "the-vale-of-glamorgan",
-      fsa_rn: realSummaryResult[0].fsa_rn
+      fsa_rn: realSummaryResult[0].fsa_rn,
+      collected: true
     });
   });
 

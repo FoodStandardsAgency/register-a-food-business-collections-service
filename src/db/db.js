@@ -21,6 +21,7 @@ module.exports = {
   Establishment: db.establishment,
   Metadata: db.metadata,
   Operator: db.operator,
+  Partner: db.partner,
   Premise: db.premise,
   Registration: db.registration,
   db,

@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       establishment_street: { type: DataTypes.STRING },
       establishment_town: { type: DataTypes.STRING },
       establishment_postcode: { type: DataTypes.STRING },
+      establishment_uprn: { type: DataTypes.STRING },
       establishment_type: { type: DataTypes.STRING }
     },
     {}

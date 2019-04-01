@@ -34,9 +34,10 @@ const {
 } = require("../../db/db");
 
 const {
-  getAllRegistrations,
+  getUnifiedRegistrations,
+  getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  updateRegistrationCollectedByCouncil
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -44,7 +45,7 @@ describe("collect.service", () => {
     jest.clearAllMocks();
   });
 
-  describe("Function: getAllRegistrations", () => {
+  describe("Function: getAllRegistrationsByCouncil", () => {
     let result;
     describe("when newRegistrations is true", () => {
       beforeEach(() => {
@@ -73,7 +74,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = getAllRegistrations("cardiff", "true");
+        result = getAllRegistrationsByCouncil("cardiff", "true");
       });
 
       it("should call registration.findAll with queryArray [false, null]", () => {
@@ -110,7 +111,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = getAllRegistrations("cardiff", "false");
+        result = getAllRegistrationsByCouncil("cardiff", "false");
       });
 
       it("should call registration.findAll with queryArray [true, false, null]", () => {
@@ -128,7 +129,7 @@ describe("collect.service", () => {
         });
 
         try {
-          await getAllRegistrations("west-dorset", false);
+          await getAllRegistrationsByCouncil("west-dorset", false);
         } catch (err) {
           result = err;
         }
@@ -149,7 +150,9 @@ describe("collect.service", () => {
         });
 
         try {
-          await getAllRegistrations("west-dorset", false, ["establishment"]);
+          await getAllRegistrationsByCouncil("west-dorset", false, [
+            "establishment"
+          ]);
         } catch (err) {
           result = err;
         }
@@ -166,7 +169,7 @@ describe("collect.service", () => {
           { id: 1, dataValues: { fsa_rn: "1234" } },
           { id: 2, dataValues: { fsa_rn: "5678" } }
         ]);
-        result = await getAllRegistrations("cardiff", true, []);
+        result = await getAllRegistrationsByCouncil("cardiff", true, []);
       });
       it("should return just the registration fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
@@ -201,7 +204,9 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = await getAllRegistrations("cardiff", true, ["establishment"]);
+        result = await getAllRegistrationsByCouncil("cardiff", true, [
+          "establishment"
+        ]);
       });
       it("should return just the establishment, operator, premise, activities fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
@@ -222,7 +227,9 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
-        result = await getAllRegistrations("cardiff", true, ["metadata"]);
+        result = await getAllRegistrationsByCouncil("cardiff", true, [
+          "metadata"
+        ]);
       });
       it("should return just the metadata fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
@@ -232,12 +239,16 @@ describe("collect.service", () => {
     });
   });
 
-  describe("Function: updateRegistrationCollected", () => {
+  describe("Function: updateRegistrationCollectedByCouncil", () => {
     let result;
     describe("When Registration.update is successful", () => {
       beforeEach(async () => {
         Registration.update.mockImplementation(() => [1]);
-        result = await updateRegistrationCollected("1234", true, "cardiff");
+        result = await updateRegistrationCollectedByCouncil(
+          "1234",
+          true,
+          "cardiff"
+        );
       });
 
       it("Should return fsa_rn and collected", () => {
@@ -271,7 +282,7 @@ describe("collect.service", () => {
           throw new Error("Failed");
         });
         try {
-          await updateRegistrationCollected("1234", true);
+          await updateRegistrationCollectedByCouncil("1234", true);
         } catch (err) {
           result = err;
         }
@@ -286,7 +297,7 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.update.mockImplementation(() => [0]);
         try {
-          await updateRegistrationCollected("1234", true, "cardiff");
+          await updateRegistrationCollectedByCouncil("1234", true, "cardiff");
         } catch (err) {
           result = err;
         }
@@ -328,7 +339,14 @@ describe("collect.service", () => {
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { operator_name: "fred" }
+          dataValues: {
+            operator_name: "fred",
+            partners: [
+              {
+                partner_name: "Darleene"
+              }
+            ]
+          }
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
@@ -349,6 +367,138 @@ describe("collect.service", () => {
       it("Should return the full registration", () => {
         expect(result.fsa_rn).toBe("1234");
         expect(result.establishment.establishment_trading_name).toBe("taco");
+        expect(result.establishment.operator.partners[0].partner_name).toBe(
+          "Darleene"
+        );
+      });
+    });
+  });
+
+  describe("Function: getUnifiedRegistrations", () => {
+    let result;
+
+    describe("when getAllRegistrations returns a result", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
+          []
+        );
+      });
+
+      it("Should return two registrations", () => {
+        expect(result.length).toBe(2);
+      });
+    });
+
+    describe("when fields is empty", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
+          []
+        );
+      });
+
+      it("should return just the registration fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toEqual({});
+        expect(result[0].metadata).toEqual({});
+      });
+    });
+
+    describe("when fields includes establishment", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        Establishment.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_trading_name: "taco" }
+        }));
+        Operator.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { operator_name: "fred" }
+        }));
+        Activities.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { business_type: "cookies" }
+        }));
+        Premise.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { establishment_postcode: "ER1 56GF" }
+        }));
+        Metadata.findOne.mockImplementation(() => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+
+        result = await getUnifiedRegistrations(
+          "2019-01-01T15:00:00Z",
+          "2019-01-01T15:00:00Z",
+          ["establishment"]
+        );
+      });
+      it("should return just the establishment, operator, premise, activities fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toBeDefined();
+        expect(result[0].establishment.premise).toBeDefined();
+        expect(result[0].establishment.operator).toBeDefined();
+        expect(result[0].establishment.activities).toBeDefined();
+      });
+    });
+
+    describe("when fields includes metadata", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => [
+          { id: 1, dataValues: { fsa_rn: "1234" } },
+          { id: 2, dataValues: { fsa_rn: "5678" } }
+        ]);
+        Metadata.findOne.mockImplementation(async () => ({
+          id: 1,
+          dataValues: { declaration1: "yes" }
+        }));
+        result = await getUnifiedRegistrations(
+          "2019-01-01T13:00:00Z",
+          "2019-04-01T13:00:00Z",
+          ["metadata"]
+        );
+      });
+      it("should return just the metadata fields", () => {
+        expect(result[0].fsa_rn).toBe("1234");
+        expect(result[0].establishment).toEqual({});
+        expect(result[0].metadata).toBeDefined();
+      });
+    });
+
+    describe("when getRegistrationsTable returns an error", () => {
+      beforeEach(async () => {
+        Registration.findAll.mockImplementation(() => {
+          throw new Error("Failed");
+        });
+
+        try {
+          result = await getUnifiedRegistrations(
+            "2019-01-01T13:00:00Z",
+            "2019-04-01T13:00:00Z",
+            []
+          );
+        } catch (err) {
+          result = err;
+        }
+      });
+      it("should bubble the error up ", () => {
+        expect(result.message).toBe("Failed");
       });
     });
   });

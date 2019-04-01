@@ -1,7 +1,8 @@
 jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
-  getAllRegistrations: jest.fn(),
+  getAllRegistrationsByCouncil: jest.fn(),
+  getUnifiedRegistrations: jest.fn(),
   getSingleRegistration: jest.fn(),
-  updateRegistrationCollected: jest.fn(),
+  updateRegistrationCollectedByCouncil: jest.fn(),
   registrationDbDouble: jest.fn()
 }));
 
@@ -10,25 +11,29 @@ jest.mock("./registrations.service");
 const { validateOptions } = require("./registrations.service");
 
 const {
-  getAllRegistrations,
+  getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollected
+  getUnifiedRegistrations,
+  updateRegistrationCollectedByCouncil
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const {
-  getRegistrations,
+  getRegistrationsByCouncil,
   getRegistration,
+  getRegistrations,
   updateRegistration
 } = require("./registrations.controller");
 
 describe("registrations.controller", () => {
   let result;
-  describe("Function: getRegistrations", () => {
+  describe("Function: getRegistrationsByCouncil", () => {
     describe("When given invalid getNewRegistrations option", () => {
       beforeEach(async () => {
         try {
           validateOptions.mockImplementation(() => false);
-          await getRegistrations({ getNewRegistrations: "not a boolean" });
+          await getRegistrationsByCouncil({
+            getNewRegistrations: "not a boolean"
+          });
         } catch (err) {
           result = err;
         }
@@ -41,7 +46,7 @@ describe("registrations.controller", () => {
     describe("When given double mode", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        result = await getRegistrations({
+        result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
           double_mode: "success"
         });
@@ -53,14 +58,16 @@ describe("registrations.controller", () => {
     describe("When successful", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        getAllRegistrations.mockImplementation(() => [{ id: 1, data: "data" }]);
-        result = await getRegistrations({
+        getAllRegistrationsByCouncil.mockImplementation(() => [
+          { id: 1, data: "data" }
+        ]);
+        result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
           council: "cardiff"
         });
       });
 
-      it("Should return the result of getAllRegistrations", () => {
+      it("Should return the result of getAllRegistrationsByCouncil", () => {
         expect(result).toEqual([{ id: 1, data: "data" }]);
       });
     });
@@ -141,7 +148,7 @@ describe("registrations.controller", () => {
     describe("When successful", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
-        updateRegistrationCollected.mockImplementation(() => ({
+        updateRegistrationCollectedByCouncil.mockImplementation(() => ({
           fsa_rn: "5768",
           collected: true
         }));
@@ -152,6 +159,54 @@ describe("registrations.controller", () => {
       });
       it("Should return the response of updateRegistrationCollected", () => {
         expect(result).toEqual({ fsa_rn: "5768", collected: true });
+      });
+    });
+  });
+
+  describe("Function: getRegistrations", () => {
+    describe("When given invalid option", () => {
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => false);
+        try {
+          await getRegistrations({ before: "true" });
+        } catch (err) {
+          result = err;
+        }
+      });
+
+      it("should bubble up the error", () => {
+        expect(result.name).toBe("optionsValidationError");
+      });
+    });
+    describe("When given double mode", () => {
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => true);
+        result = await getRegistrations({
+          before: "2019-01-01",
+          after: "2019-02-01",
+          double_mode: "success"
+        });
+      });
+      it("Should return the double response", () => {
+        expect(result[0].establishment.id).toBe(68);
+      });
+    });
+    describe("When successful", () => {
+      beforeEach(async () => {
+        validateOptions.mockImplementation(() => true);
+        getUnifiedRegistrations.mockImplementation(() => [
+          {
+            fsa_rn: "5768",
+            collected: true
+          }
+        ]);
+        result = await getRegistrations({
+          before: "2019-01-01",
+          after: "2019-02-01"
+        });
+      });
+      it("Should return the response", () => {
+        expect(result).toEqual([{ fsa_rn: "5768", collected: true }]);
       });
     });
   });
