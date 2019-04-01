@@ -6,11 +6,11 @@ const baseUrl =
 const cardiffUrl = `${baseUrl}cardiff`;
 const cardiffAPIKey = "b175199d420448fc87baa714e458ce6e";
 
-describe("Retrieve all registrations through API", () => {
+describe("Update single registration through API", () => {
   let availableRegistrations;
   beforeAll(async () => {
     const requestOptions = {
-      uri: cardiffUrl,
+      uri: `${cardiffUrl}?env=${process.env.NODE_ENV}`,
       json: true,
       headers: {
         "Ocp-Apim-Subscription-Key": cardiffAPIKey
@@ -23,7 +23,9 @@ describe("Retrieve all registrations through API", () => {
     let response;
     beforeEach(async () => {
       const update = {
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
+          process.env.NODE_ENV
+        }`,
         json: true,
         method: "put",
         headers: {
@@ -36,7 +38,7 @@ describe("Retrieve all registrations through API", () => {
       response = await request(update);
     });
 
-    it("should return all the new registrations for that council", () => {
+    it("should return the updated object with collected true", () => {
       expect(response.fsa_rn).toBe(availableRegistrations[0].fsa_rn);
       expect(response.collected).toBe(true);
     });
@@ -47,7 +49,9 @@ describe("Retrieve all registrations through API", () => {
     beforeEach(async () => {
       const requestOptions = {
         method: "put",
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
+          process.env.NODE_ENV
+        }`,
         json: true,
         headers: {
           "Ocp-Apim-Subscription-Key": cardiffAPIKey
@@ -73,7 +77,9 @@ describe("Retrieve all registrations through API", () => {
     let response;
     beforeEach(async () => {
       const update = {
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
+          process.env.NODE_ENV
+        }`,
         json: true,
         method: "put",
         headers: {
@@ -97,7 +103,9 @@ describe("Retrieve all registrations through API", () => {
     beforeEach(async () => {
       const requestOptions = {
         method: "put",
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
+          process.env.NODE_ENV
+        }`,
         json: true,
         headers: {
           "Ocp-Apim-Subscription-Key": "incorrectKey"
