@@ -22,7 +22,54 @@ describe("GET to /api/registrations/unified", () => {
     });
 
     it("should return all the new registrations", () => {
+      expect(Array.isArray(response)).toBe(true);
       expect(response.length).toBe(2);
+    });
+  });
+
+  describe("Given before and after are both in the future", () => {
+    let response;
+    beforeEach(async () => {
+      let before = new Date();
+      let after = new Date();
+      before.setDate(before.getDate() + 20);
+      after.setDate(after.getDate() + 15);
+
+      const requestOptions = {
+        uri: `${url}?before=${before
+          .toISOString()
+          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        json: true
+      };
+      response = await request(requestOptions);
+    });
+
+    it("should return zero new registrations", () => {
+      expect(Array.isArray(response)).toBe(true);
+      expect(response.length).toBe(0);
+    });
+  });
+
+  describe("Given before and after are both before records began", () => {
+    let response;
+    beforeEach(async () => {
+      let before = new Date();
+      let after = new Date();
+      before.setDate(before.getDate() - 15);
+      after.setDate(after.getDate() - 20);
+
+      const requestOptions = {
+        uri: `${url}?before=${before
+          .toISOString()
+          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        json: true
+      };
+      response = await request(requestOptions);
+    });
+
+    it("should return zero new registrations", () => {
+      expect(Array.isArray(response)).toBe(true);
+      expect(response.length).toBe(0);
     });
   });
 
