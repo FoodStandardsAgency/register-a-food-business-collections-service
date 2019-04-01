@@ -40,7 +40,7 @@ const validateDateTime = value => {
   if (!validateString(value)) {
     return false;
   }
-  return isISO8601(value);
+  return isISO8601(value, { strict: true });
 };
 
 const dateTimeFormat = "yyyy-MM-ddTHH:mm:ssZ";
