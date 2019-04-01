@@ -33,7 +33,7 @@ const dateRange = (afterValue, beforeValue) => {
   let before = new Date(beforeValue);
   before.setDate(before.getDate() - 7);
 
-  return !(before > after);
+  return after >= before;
 };
 
 const validateDateTime = value => {
@@ -72,11 +72,11 @@ const validationFields = {
   },
   before: {
     function: validateDateTime,
-    message: `before option must follow the format '${dateTimeFormat}}'`
+    message: `before option must be a valid ISO 8601 date and time ('${dateTimeFormat}')`
   },
   after: {
     function: validateDateTime,
-    message: `after option must follow the format '${dateTimeFormat}'`
+    message: `after option must be a valid ISO 8601 date and time ('${dateTimeFormat}')`
   },
   dateRange: {
     message: "range between before and after options must be less than 7 days"
