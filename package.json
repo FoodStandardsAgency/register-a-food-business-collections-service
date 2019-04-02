@@ -10,6 +10,7 @@
     "test:component:ci": "export TEST_TYPE=component && jest ./tests/component/*.js --runInBand",
     "test:integration": "jest ./tests/integration/*.js",
     "test:contract": "npm run reset-postgres && jest ./tests/contract/*.js",
+    "test:api:e2e": "jest ./tests/e2e/*.js --runInBand",
     "start": "node src/app.js",
     "start:docker": "export NODE_ENV=local && node src/db/check-connection.js && node src/app.js",
     "lint": "eslint ./src",
