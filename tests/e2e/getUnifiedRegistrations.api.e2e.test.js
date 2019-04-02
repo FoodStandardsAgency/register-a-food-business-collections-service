@@ -43,9 +43,9 @@ describe("Retrieve all registrations through API", () => {
       let after = new Date();
       after.setDate(after.getDate() - 5);
       const requestOptions = {
-        uri: `${unifiedUrl}?before=${before
-          .toISOString()}&after=${after
-          .toISOString()}&env=${process.env.NODE_ENV}`,
+        uri: `${unifiedUrl}?before=${before.toISOString()}&after=${after.toISOString()}&env=${
+          process.env.NODE_ENV
+        }`,
         json: true,
         resolveWithFullResponse: true,
         headers: {
@@ -71,9 +71,9 @@ describe("Retrieve all registrations through API", () => {
       let after = new Date();
       after.setDate(after.getDate() - 5);
       const requestOptions = {
-        uri: `${unifiedUrl}?before=${before
-          .toISOString()}&after=${after
-          .toISOString()}&env=${process.env.NODE_ENV}`,
+        uri: `${unifiedUrl}?before=${before.toISOString()}&after=${after.toISOString()}&env=${
+          process.env.NODE_ENV
+        }`,
         json: true
       };
 
