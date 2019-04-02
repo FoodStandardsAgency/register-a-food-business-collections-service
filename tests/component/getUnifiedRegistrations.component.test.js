@@ -13,9 +13,7 @@ describe("GET to /api/registrations/unified", () => {
       after.setDate(after.getDate() - 5);
 
       const requestOptions = {
-        uri: `${url}?before=${before
-          .toISOString()
-          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true
       };
       response = await request(requestOptions);
@@ -36,9 +34,7 @@ describe("GET to /api/registrations/unified", () => {
       after.setDate(after.getDate() + 15);
 
       const requestOptions = {
-        uri: `${url}?before=${before
-          .toISOString()
-          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true
       };
       response = await request(requestOptions);
@@ -59,9 +55,7 @@ describe("GET to /api/registrations/unified", () => {
       after.setDate(after.getDate() - 20);
 
       const requestOptions = {
-        uri: `${url}?before=${before
-          .toISOString()
-          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true
       };
       response = await request(requestOptions);
@@ -81,9 +75,7 @@ describe("GET to /api/registrations/unified", () => {
       after.setDate(after.getDate() - 5);
 
       const requestOptions = {
-        uri: `${url}?before=${before
-          .toISOString()
-          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true,
         headers: {
           "double-mode": "success"
@@ -106,9 +98,7 @@ describe("GET to /api/registrations/unified", () => {
       after.setDate(after.getDate() - 8);
 
       const requestOptions = {
-        uri: `${url}?before=${before
-          .toISOString()
-          .substring(0, 19)}&after=${after.toISOString().substring(0, 19)}`,
+        uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true
       };
       try {
