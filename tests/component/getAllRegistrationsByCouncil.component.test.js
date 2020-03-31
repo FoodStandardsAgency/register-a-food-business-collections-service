@@ -56,7 +56,7 @@ describe("GET to /api/registrations/:lc", () => {
 
     it("should return on the summary information for the registrations", () => {
       expect(response[0].establishment).toEqual({});
-      expect(response[0].declaration).toEqual({});
+      expect(response[0].metadata).toEqual({});
     });
   });
 
@@ -64,7 +64,7 @@ describe("GET to /api/registrations/:lc", () => {
     let response;
     beforeEach(async () => {
       const requestOptions = {
-        uri: `${url}?fields=establishment,declaration`,
+        uri: `${url}?fields=establishment,metadata`,
         json: true
       };
       response = await request(requestOptions);
@@ -74,7 +74,7 @@ describe("GET to /api/registrations/:lc", () => {
       expect(
         response[0].establishment.establishment_trading_name
       ).toBeDefined();
-      expect(response[0].declaration.declaration1).toBeDefined();
+      expect(response[0].metadata.declaration1).toBeDefined();
     });
   });
 

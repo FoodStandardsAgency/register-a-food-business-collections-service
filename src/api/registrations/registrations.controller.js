@@ -95,7 +95,7 @@ const getRegistrations = async options => {
     const registrations = await getUnifiedRegistrations(
       options.before,
       options.after,
-      ["establishment", "declaration"]
+      ["establishment", "metadata"]
     );
     logEmitter.emit(
       "functionSuccess",

@@ -40,7 +40,7 @@ describe("Update single registration through API", () => {
       expect(response.establishment).toBeDefined();
       expect(response.establishment.operator).toBeDefined();
       expect(response.establishment.premise).toBeDefined();
-      expect(response.declaration).toBeDefined();
+      expect(response.metadata).toBeDefined();
     });
   });
 

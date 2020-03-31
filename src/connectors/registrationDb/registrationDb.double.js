@@ -21,7 +21,7 @@ const doubleResponse = [
         id: 68,
         operator_type: "Sole trader",
         operator_company_name: "name",
-        operator_companies_house_number: null,
+        operator_company_house_number: null,
         operator_charity_name: null,
         operator_charity_number: null,
         operator_first_name: "Fred",
@@ -83,7 +83,7 @@ const doubleResponse = [
         establishmentId: 68
       }
     },
-    declaration: {
+    metadata: {
       id: 62,
       declaration1: "Declaration",
       declaration2: "Declaration",

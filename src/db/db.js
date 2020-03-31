@@ -19,7 +19,7 @@ const closeConnection = async () => {
 module.exports = {
   Activities: db.activities,
   Establishment: db.establishment,
-  Declaration: db.declaration,
+  Metadata: db.metadata,
   Operator: db.operator,
   Partner: db.partner,
   Premise: db.premise,

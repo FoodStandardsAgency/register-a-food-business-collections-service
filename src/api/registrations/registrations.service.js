@@ -19,7 +19,7 @@ const validateDoubleMode = value => {
   return doubleModes.includes(value);
 };
 
-const allowedFields = ["declaration", "establishment"];
+const allowedFields = ["metadata", "establishment"];
 const validateFields = value => {
   if (!Array.isArray(value)) {
     return false;

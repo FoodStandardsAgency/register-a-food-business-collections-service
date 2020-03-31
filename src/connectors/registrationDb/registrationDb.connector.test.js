@@ -8,7 +8,7 @@ jest.mock("../../db/db", () => ({
   Establishment: {
     findOne: jest.fn()
   },
-  Declaration: {
+  Metadata: {
     findOne: jest.fn()
   },
   Operator: {
@@ -33,7 +33,7 @@ jest.mock("../../db/db", () => ({
 const {
   Activities,
   Establishment,
-  Declaration,
+  Metadata,
   Operator,
   Premise,
   Registration,
@@ -77,7 +77,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { establishment_postcode: "ER1 56GF" }
         }));
-        Declaration.findOne.mockImplementation(() => ({
+        Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
@@ -114,7 +114,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { establishment_postcode: "ER1 56GF" }
         }));
-        Declaration.findOne.mockImplementation(() => ({
+        Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
@@ -194,7 +194,7 @@ describe("collect.service", () => {
         expect(result[0].local_council_url).toBe("area");
         expect(result[0].council).toBe("Area Council");
         expect(result[0].establishment).toEqual({});
-        expect(result[0].declaration).toEqual({});
+        expect(result[0].metadata).toEqual({});
       });
     });
 
@@ -226,7 +226,7 @@ describe("collect.service", () => {
             establishment_address_line_1: "etest"
           }
         }));
-        Declaration.findOne.mockImplementation(() => ({
+        Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
@@ -251,24 +251,24 @@ describe("collect.service", () => {
       });
     });
 
-    describe("when fields includes declaration", () => {
+    describe("when fields includes metadata", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
           { id: 2, dataValues: { fsa_rn: "5678" } }
         ]);
-        Declaration.findOne.mockImplementation(async () => ({
+        Metadata.findOne.mockImplementation(async () => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
         result = await getAllRegistrationsByCouncil("cardiff", true, [
-          "declaration"
+          "metadata"
         ]);
       });
-      it("should return just the declaration fields", () => {
+      it("should return just the metadata fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
         expect(result[0].establishment).toEqual({});
-        expect(result[0].declaration).toBeDefined();
+        expect(result[0].metadata).toBeDefined();
       });
     });
   });
@@ -390,7 +390,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { establishment_postcode: "ER1 56GF" }
         }));
-        Declaration.findOne.mockImplementation(() => ({
+        Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
@@ -459,7 +459,7 @@ describe("collect.service", () => {
         expect(result[0].competent_authority_id).toBe("5678");
         expect(result[0].local_council_url).toBe("area");
         expect(result[0].establishment).toEqual({});
-        expect(result[0].declaration).toEqual({});
+        expect(result[0].metadata).toEqual({});
       });
     });
 
@@ -490,7 +490,7 @@ describe("collect.service", () => {
           id: 1,
           dataValues: { establishment_postcode: "ER1 56GF" }
         }));
-        Declaration.findOne.mockImplementation(() => ({
+        Metadata.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
@@ -520,7 +520,7 @@ describe("collect.service", () => {
         Operator.findOne.mockImplementation(() => null);
         Activities.findOne.mockImplementation(() => null);
         Premise.findOne.mockImplementation(() => null);
-        Declaration.findOne.mockImplementation(() => null);
+        Metadata.findOne.mockImplementation(() => null);
 
         result = await getUnifiedRegistrations(
           "2019-01-01T15:00:00Z",
@@ -550,7 +550,7 @@ describe("collect.service", () => {
         Operator.findOne.mockImplementation(() => null);
         Activities.findOne.mockImplementation(() => null);
         Premise.findOne.mockImplementation(() => null);
-        Declaration.findOne.mockImplementation(() => null);
+        Metadata.findOne.mockImplementation(() => null);
 
         result = await getUnifiedRegistrations(
           "2019-01-01T15:00:00Z",
@@ -567,7 +567,7 @@ describe("collect.service", () => {
       });
     });
 
-    describe("when fields includes declaration", () => {
+    describe("when fields includes metadata", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234", council: "area" } },
@@ -578,20 +578,20 @@ describe("collect.service", () => {
           competent_authority_id: "5678",
           local_council_url: "area"
         }));
-        Declaration.findOne.mockImplementation(async () => ({
+        Metadata.findOne.mockImplementation(async () => ({
           id: 1,
           dataValues: { declaration1: "yes" }
         }));
         result = await getUnifiedRegistrations(
           "2019-01-01T13:00:00Z",
           "2019-04-01T13:00:00Z",
-          ["declaration"]
+          ["metadata"]
         );
       });
-      it("should return just the declaration fields", () => {
+      it("should return just the metadata fields", () => {
         expect(result[0].fsa_rn).toBe("1234");
         expect(result[0].establishment).toEqual({});
-        expect(result[0].declaration).toBeDefined();
+        expect(result[0].metadata).toBeDefined();
       });
     });
 

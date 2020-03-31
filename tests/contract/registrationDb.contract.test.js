@@ -21,7 +21,7 @@ describe("registrationDb.connector integration: getRegistrationsByCouncil", () =
     doubleResult = await getRegistrationsByCouncil({ double_mode: "success" });
     realResult = await getRegistrationsByCouncil({
       council: "cardiff",
-      fields: ["establishment", "declaration"]
+      fields: ["establishment", "metadata"]
     });
   });
 
@@ -37,7 +37,7 @@ describe("registrationDb.connector integration: getRegistrationsByCouncil", () =
     expect(
       realResult[0].establishment.premise.establishment_type
     ).toBeDefined();
-    expect(realResult[0].declaration.declaration1).toBeDefined();
+    expect(realResult[0].metadata.declaration1).toBeDefined();
     expect(doubleResult[0].fsa_rn).toBeDefined();
     expect(doubleResult[0].council).toBeDefined();
     expect(
@@ -50,7 +50,7 @@ describe("registrationDb.connector integration: getRegistrationsByCouncil", () =
     expect(
       doubleResult[0].establishment.premise.establishment_type
     ).toBeDefined();
-    expect(doubleResult[0].declaration.declaration1).toBeDefined();
+    expect(doubleResult[0].metadata.declaration1).toBeDefined();
   });
 });
 
@@ -74,14 +74,14 @@ describe("registrationDb.connector integration: getSingleRegistrations", () => {
     expect(realResult.establishment.operator.operator_type).toBeDefined();
     expect(realResult.establishment.activities.business_type).toBeDefined();
     expect(realResult.establishment.premise.establishment_type).toBeDefined();
-    expect(realResult.declaration.declaration1).toBeDefined();
+    expect(realResult.metadata.declaration1).toBeDefined();
     expect(doubleResult.fsa_rn).toBeDefined();
     expect(doubleResult.council).toBeDefined();
     expect(doubleResult.establishment.establishment_trading_name).toBeDefined();
     expect(doubleResult.establishment.operator.operator_type).toBeDefined();
     expect(doubleResult.establishment.activities.business_type).toBeDefined();
     expect(doubleResult.establishment.premise.establishment_type).toBeDefined();
-    expect(doubleResult.declaration.declaration1).toBeDefined();
+    expect(doubleResult.metadata.declaration1).toBeDefined();
   });
 });
 
@@ -110,7 +110,7 @@ describe("registrationDb.connector integration: getRegistrations", () => {
     expect(
       realResult[0].establishment.premise.establishment_type
     ).toBeDefined();
-    expect(realResult[0].declaration.declaration1).toBeDefined();
+    expect(realResult[0].metadata.declaration1).toBeDefined();
     expect(doubleResult[0].fsa_rn).toBeDefined();
     expect(doubleResult[0].council).toBeDefined();
     expect(
@@ -123,7 +123,7 @@ describe("registrationDb.connector integration: getRegistrations", () => {
     expect(
       doubleResult[0].establishment.premise.establishment_type
     ).toBeDefined();
-    expect(doubleResult[0].declaration.declaration1).toBeDefined();
+    expect(doubleResult[0].metadata.declaration1).toBeDefined();
   });
 });
 

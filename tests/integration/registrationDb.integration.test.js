@@ -14,7 +14,7 @@ describe("registrationDb.connector integration: getAllRegistrations", () => {
     expect(result[0].establishment.operator.operator_type).toBeDefined();
     expect(result[0].establishment.activities.business_type).toBeDefined();
     expect(result[0].establishment.premise.establishment_type).toBeDefined();
-    expect(result[0].declaration.declaration1).toBeDefined();
+    expect(result[0].metadata.declaration1).toBeDefined();
   });
 });
 
@@ -28,7 +28,7 @@ describe("registrationDb.connector integration: getSingleRegistration", () => {
     expect(result.establishment.operator.operator_type).toBeDefined();
     expect(result.establishment.activities.business_type).toBeDefined();
     expect(result.establishment.premise.establishment_type).toBeDefined();
-    expect(result.declaration.declaration1).toBeDefined();
+    expect(result.metadata.declaration1).toBeDefined();
   });
 });
 

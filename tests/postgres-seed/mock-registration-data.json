@@ -50,7 +50,7 @@
           "opening_hours_sunday": "From 9:30 to 19:00"
         }
       },
-      "declaration": {
+      "metadata": {
         "declaration1": "Vivamus vel nulla eget eros elementum pellentesque.",
         "declaration2": "In hac habitasse platea dictumst. Etiam faucibus cursus urna.",
         "declaration3": "Nullam varius. Nulla facilisi."
@@ -117,7 +117,7 @@
           "opening_hours_sunday": "From 9:30 to 19:00"
         }
       },
-      "declaration": {
+      "metadata": {
         "declaration1": "In hac habitasse platea dictumst. Aliquam augue quam, sollicitudin vitae, consectetuer eget, rutrum at, lorem.",
         "declaration2": "Integer ac leo. Pellentesque ultrices mattis odio.",
         "declaration3": "Nunc purus."

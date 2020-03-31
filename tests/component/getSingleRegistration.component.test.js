@@ -23,7 +23,7 @@ describe("GET to /api/registrations/:lc/:fsa_rn", () => {
 
     it("should return all the full details of that registration", () => {
       expect(response.establishment.establishment_trading_name).toBeDefined();
-      expect(response.declaration.declaration1).toBeDefined();
+      expect(response.metadata.declaration1).toBeDefined();
     });
   });
 
