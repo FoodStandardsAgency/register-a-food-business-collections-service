@@ -7,7 +7,7 @@ module.exports = {
       Sequelize.STRING
     );
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.removeColumn("activities", "business_other_details");
-  }
+  },
 };

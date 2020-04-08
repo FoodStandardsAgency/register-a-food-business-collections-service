@@ -4,7 +4,7 @@ const {
   getRegistrationsByCouncil,
   getRegistration,
   getRegistrations,
-  updateRegistration
+  updateRegistration,
 } = require("./registrations.controller");
 
 const registrationsRouter = () => {
@@ -21,7 +21,7 @@ const registrationsRouter = () => {
       const options = {
         double_mode: req.headers["double-mode"] || "",
         after: req.query.after,
-        before: req.query.before
+        before: req.query.before,
       };
 
       registrations = await getRegistrations(options);
@@ -54,7 +54,7 @@ const registrationsRouter = () => {
         fields,
         council: req.params.lc,
         after: req.query.after || "2000-01-01",
-        before: req.query.before || new Date(Date.now()).toISOString()
+        before: req.query.before || new Date(Date.now()).toISOString(),
       };
 
       registrations = await getRegistrationsByCouncil(options);
@@ -86,7 +86,7 @@ const registrationsRouter = () => {
       const options = {
         double_mode: req.headers["double-mode"] || "",
         fsa_rn: req.params.fsa_rn,
-        council: req.params.lc
+        council: req.params.lc,
       };
 
       const registration = await getRegistration(options);
@@ -119,7 +119,7 @@ const registrationsRouter = () => {
         double_mode: req.headers["double-mode"] || "",
         collected: req.body.collected,
         fsa_rn: req.params.fsa_rn,
-        council: req.params.lc
+        council: req.params.lc,
       };
 
       const response = await updateRegistration(options);

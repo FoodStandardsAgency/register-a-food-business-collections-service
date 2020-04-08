@@ -4,7 +4,7 @@ const {
   getRegistrationsByCouncil,
   getRegistration,
   getRegistrations,
-  updateRegistration
+  updateRegistration,
 } = require("../../src/api/registrations/registrations.controller");
 
 const { closeConnection } = require("../../src/db/db");
@@ -21,7 +21,7 @@ describe("registrationDb.connector integration: getRegistrationsByCouncil", () =
     doubleResult = await getRegistrationsByCouncil({ double_mode: "success" });
     realResult = await getRegistrationsByCouncil({
       council: "cardiff",
-      fields: ["establishment", "metadata"]
+      fields: ["establishment", "metadata"],
     });
   });
 
@@ -58,11 +58,11 @@ describe("registrationDb.connector integration: getSingleRegistrations", () => {
   beforeEach(async () => {
     doubleResult = await getRegistration({ double_mode: "single" });
     const realSummaryResult = await getRegistrationsByCouncil({
-      council: "cardiff"
+      council: "cardiff",
     });
     realResult = await getRegistration({
       council: "cardiff",
-      fsa_rn: realSummaryResult[0].fsa_rn
+      fsa_rn: realSummaryResult[0].fsa_rn,
     });
   });
 
@@ -94,7 +94,7 @@ describe("registrationDb.connector integration: getRegistrations", () => {
     doubleResult = await getRegistrations({ double_mode: "success" });
     realResult = await getRegistrations({
       before: before.toISOString(),
-      after: after.toISOString()
+      after: after.toISOString(),
     });
   });
 
@@ -131,12 +131,12 @@ describe("registrationDb.connector integration: updateRegistrationCollected", ()
   beforeEach(async () => {
     doubleResult = await updateRegistration({ double_mode: "update" });
     const realSummaryResult = await getRegistrationsByCouncil({
-      council: "the-vale-of-glamorgan"
+      council: "the-vale-of-glamorgan",
     });
     realResult = await updateRegistration({
       council: "the-vale-of-glamorgan",
       fsa_rn: realSummaryResult[0].fsa_rn,
-      collected: true
+      collected: true,
     });
   });
 

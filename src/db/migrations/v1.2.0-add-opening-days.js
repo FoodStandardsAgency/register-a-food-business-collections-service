@@ -41,10 +41,10 @@ module.exports = {
         "activities",
         "opening_day_sunday",
         Sequelize.BOOLEAN
-      )
+      ),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeColumn("activities", "opening_days_irregular"),
       queryInterface.removeColumn("activities", "opening_day_monday"),
@@ -53,7 +53,7 @@ module.exports = {
       queryInterface.removeColumn("activities", "opening_day_thursday"),
       queryInterface.removeColumn("activities", "opening_day_friday"),
       queryInterface.removeColumn("activities", "opening_day_saturday"),
-      queryInterface.removeColumn("activities", "opening_day_sunday")
+      queryInterface.removeColumn("activities", "opening_day_sunday"),
     ]);
-  }
+  },
 };

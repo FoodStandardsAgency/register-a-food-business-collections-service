@@ -3,15 +3,15 @@ jest.mock("./errors.json", () => [
     name: "testError",
     code: "1",
     developerMessage: "This is a test error",
-    statusCode: 400
-  }
+    statusCode: 400,
+  },
 ]);
 
 const { errorHandler } = require("./errorHandler");
 
 const res = {
   status: jest.fn(),
-  send: jest.fn()
+  send: jest.fn(),
 };
 
 describe("Middleware: errorHandler", () => {
@@ -21,7 +21,7 @@ describe("Middleware: errorHandler", () => {
   describe("When given an error which is not defined in errors.json", () => {
     it("Should return unknown error", () => {
       const error = {
-        name: "someError"
+        name: "someError",
       };
       errorHandler(error, "request", res);
       expect(res.status).toBeCalledWith(500);
@@ -32,7 +32,7 @@ describe("Middleware: errorHandler", () => {
   describe("When given an error which is defined in errors.json", () => {
     beforeEach(() => {
       const error = {
-        name: "testError"
+        name: "testError",
       };
       errorHandler(error, "request", res);
     });
@@ -50,7 +50,7 @@ describe("Middleware: errorHandler", () => {
     beforeEach(() => {
       const error = {
         name: "testError",
-        rawError: "raw"
+        rawError: "raw",
       };
       errorHandler(error, "request", res);
     });

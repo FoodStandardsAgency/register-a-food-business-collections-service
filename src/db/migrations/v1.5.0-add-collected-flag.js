@@ -7,7 +7,7 @@ module.exports = {
       Sequelize.BOOLEAN
     );
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.removeColumn("registrations", "collected");
-  }
+  },
 };

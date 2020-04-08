@@ -1,10 +1,10 @@
 const mockLogger = {
   info: jest.fn(),
-  error: jest.fn()
+  error: jest.fn(),
 };
 
 jest.mock("./logger", () => ({
-  createLogger: () => mockLogger
+  createLogger: () => mockLogger,
 }));
 
 // const { logger } = require("./logger");
@@ -28,7 +28,7 @@ describe("logEmitter", () => {
   describe("on functionFail event", () => {
     it("should call winston error", () => {
       logEmitter.emit("functionFail", "module", "function", {
-        message: "error"
+        message: "error",
       });
       expect(mockLogger.error).toBeCalled();
     });

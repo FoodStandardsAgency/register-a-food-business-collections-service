@@ -15,8 +15,8 @@ describe("Retrieve all registrations through API", () => {
         json: true,
         resolveWithFullResponse: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
-        }
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
+        },
       };
       response = await request(requestOptions);
     });
@@ -36,11 +36,11 @@ describe("Retrieve all registrations through API", () => {
         uri: `${baseUrl}incorrectAuthority?env=${process.env.NODE_ENV}`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
-        }
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
+        },
       };
 
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -60,10 +60,10 @@ describe("Retrieve all registrations through API", () => {
         uri: `${cardiffUrl}?env=${process.env.NODE_ENV}`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": "incorrectKey"
-        }
+          "Ocp-Apim-Subscription-Key": "incorrectKey",
+        },
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -79,9 +79,9 @@ describe("Retrieve all registrations through API", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${cardiffUrl}?env=${process.env.NODE_ENV}`,
-        json: true
+        json: true,
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -101,10 +101,10 @@ describe("Retrieve all registrations through API", () => {
         uri: `${cardiffUrl}?new=alskdfj&env=${process.env.NODE_ENV}`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
-        }
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
+        },
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });

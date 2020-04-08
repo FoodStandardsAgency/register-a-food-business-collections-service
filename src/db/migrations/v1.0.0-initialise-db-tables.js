@@ -5,14 +5,14 @@ const createRegistrations = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
-    }
+      type: Sequelize.DATE,
+    },
   });
 
 const createEstablishments = (queryInterface, Sequelize) =>
@@ -20,23 +20,23 @@ const createEstablishments = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     registrationId: {
       type: Sequelize.INTEGER,
       references: {
         model: "registrations",
-        key: "id"
+        key: "id",
       },
       onUpdate: "cascade",
-      onDelete: "cascade"
-    }
+      onDelete: "cascade",
+    },
   });
 
 const createMetadata = (queryInterface, Sequelize) =>
@@ -44,23 +44,23 @@ const createMetadata = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     registrationId: {
       type: Sequelize.INTEGER,
       references: {
         model: "registrations",
-        key: "id"
+        key: "id",
       },
       onUpdate: "cascade",
-      onDelete: "cascade"
-    }
+      onDelete: "cascade",
+    },
   });
 
 const createActivities = (queryInterface, Sequelize) =>
@@ -68,23 +68,23 @@ const createActivities = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     establishmentId: {
       type: Sequelize.INTEGER,
       references: {
         model: "establishments",
-        key: "id"
+        key: "id",
       },
       onUpdate: "cascade",
-      onDelete: "cascade"
-    }
+      onDelete: "cascade",
+    },
   });
 
 const createOperators = (queryInterface, Sequelize) =>
@@ -92,23 +92,23 @@ const createOperators = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     establishmentId: {
       type: Sequelize.INTEGER,
       references: {
         model: "establishments",
-        key: "id"
+        key: "id",
       },
       onUpdate: "cascade",
-      onDelete: "cascade"
-    }
+      onDelete: "cascade",
+    },
   });
 
 const createPremises = (queryInterface, Sequelize) =>
@@ -116,23 +116,23 @@ const createPremises = (queryInterface, Sequelize) =>
     id: {
       type: Sequelize.INTEGER,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true,
     },
     createdAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     updatedAt: {
-      type: Sequelize.DATE
+      type: Sequelize.DATE,
     },
     establishmentId: {
       type: Sequelize.INTEGER,
       references: {
         model: "establishments",
-        key: "id"
+        key: "id",
       },
       onUpdate: "cascade",
-      onDelete: "cascade"
-    }
+      onDelete: "cascade",
+    },
   });
 
 module.exports = {
@@ -145,17 +145,17 @@ module.exports = {
           createOperators(queryInterface, Sequelize);
           createPremises(queryInterface, Sequelize);
         });
-      })
+      }),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.dropTable("activities"),
       queryInterface.dropTable("establishments"),
       queryInterface.dropTable("metadata"),
       queryInterface.dropTable("operators"),
       queryInterface.dropTable("premises"),
-      queryInterface.dropTable("registrations")
+      queryInterface.dropTable("registrations"),
     ]);
-  }
+  },
 };

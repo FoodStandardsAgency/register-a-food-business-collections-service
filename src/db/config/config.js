@@ -10,8 +10,8 @@ module.exports = {
     dialect: "postgres",
     logging: logger.debug,
     dialectOptions: {
-      ssl: true
-    }
+      ssl: true,
+    },
   },
   development: {
     username: process.env.POSTGRES_USER,
@@ -21,8 +21,16 @@ module.exports = {
     dialect: "postgres",
     logging: logger.debug,
     dialectOptions: {
-      ssl: true
-    }
+      ssl: true,
+    },
+  },
+  test: {
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASS,
+    database: process.env.POSTGRES_DB,
+    host: process.env.POSTGRES_HOST,
+    dialect: "postgres",
+    logging: logger.debug,
   },
   local: {
     username: process.env.POSTGRES_USER,
@@ -30,6 +38,6 @@ module.exports = {
     database: process.env.POSTGRES_DB,
     host: process.env.POSTGRES_HOST,
     dialect: "postgres",
-    logging: logger.debug
-  }
+    logging: logger.debug,
+  },
 };

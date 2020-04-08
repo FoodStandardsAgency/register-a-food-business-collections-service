@@ -10,7 +10,7 @@ describe("PUT to /api/registrations/:lc/:fsa_rn", () => {
     beforeEach(async () => {
       const summaryRequestOptions = {
         uri: url,
-        json: true
+        json: true,
       };
       const summaryResponse = await request(summaryRequestOptions);
       const requestOptions = {
@@ -18,8 +18,8 @@ describe("PUT to /api/registrations/:lc/:fsa_rn", () => {
         json: true,
         method: "PUT",
         body: {
-          collected: true
-        }
+          collected: true,
+        },
       };
       response = await request(requestOptions);
     });
@@ -35,7 +35,7 @@ describe("PUT to /api/registrations/:lc/:fsa_rn", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}/1234253`,
-        json: true
+        json: true,
       };
       try {
         await request(requestOptions);
@@ -57,8 +57,8 @@ describe("PUT to /api/registrations/:lc/:fsa_rn", () => {
         uri: `${url}/1234253`,
         json: true,
         headers: {
-          "double-mode": "invalid double mode"
-        }
+          "double-mode": "invalid double mode",
+        },
       };
       try {
         await request(requestOptions);
@@ -83,8 +83,8 @@ describe("PUT to /api/registrations/:lc/:fsa_rn", () => {
         uri: `${url}`,
         json: true,
         headers: {
-          "double-mode": "update"
-        }
+          "double-mode": "update",
+        },
       };
       response = await request(requestOptions);
     });

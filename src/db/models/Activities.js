@@ -5,7 +5,7 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       customer_type: { type: DataTypes.STRING },
       business_type: { type: DataTypes.STRING },
@@ -27,13 +27,13 @@ module.exports = (sequelize, DataTypes) => {
       opening_hours_thursday: { type: DataTypes.STRING(50) },
       opening_hours_friday: { type: DataTypes.STRING(50) },
       opening_hours_saturday: { type: DataTypes.STRING(50) },
-      opening_hours_sunday: { type: DataTypes.STRING(50) }
+      opening_hours_sunday: { type: DataTypes.STRING(50) },
     },
     {
-      timestamps: false
+      timestamps: false,
     }
   );
-  Activities.associate = function(models) {
+  Activities.associate = function (models) {
     Activities.belongsTo(models.establishment);
   };
   return Activities;

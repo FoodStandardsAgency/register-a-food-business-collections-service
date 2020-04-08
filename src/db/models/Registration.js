@@ -5,24 +5,24 @@ module.exports = (sequelize, DataTypes) => {
       id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       fsa_rn: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       council: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
       },
       collected: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
+        defaultValue: false,
       },
       collected_at: {
-        type: DataTypes.STRING
-      }
+        type: DataTypes.STRING,
+      },
     },
     {
-      timestamps: false
+      timestamps: false,
     }
   );
   return Registration;

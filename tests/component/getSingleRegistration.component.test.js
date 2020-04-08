@@ -11,12 +11,12 @@ describe("GET to /api/registrations/:lc/:fsa_rn", () => {
       // await resetDB();
       const summaryRequestOptions = {
         uri: url,
-        json: true
+        json: true,
       };
       const summaryResponse = await request(summaryRequestOptions);
       const requestOptions = {
         uri: `${url}/${summaryResponse[0].fsa_rn}`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -32,7 +32,7 @@ describe("GET to /api/registrations/:lc/:fsa_rn", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}/1234253`,
-        json: true
+        json: true,
       };
       try {
         await request(requestOptions);
@@ -54,8 +54,8 @@ describe("GET to /api/registrations/:lc/:fsa_rn", () => {
         uri: `${url}/1234253`,
         json: true,
         headers: {
-          "double-mode": "invalid double mode"
-        }
+          "double-mode": "invalid double mode",
+        },
       };
       try {
         await request(requestOptions);
@@ -80,8 +80,8 @@ describe("GET to /api/registrations/:lc/:fsa_rn", () => {
         uri: `${url}`,
         json: true,
         headers: {
-          "double-mode": "single"
-        }
+          "double-mode": "single",
+        },
       };
       response = await request(requestOptions);
     });

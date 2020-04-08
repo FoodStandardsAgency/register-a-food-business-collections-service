@@ -13,16 +13,16 @@ const recreateEstablishmentsForeignKey = (queryInterface, t, setting) =>
     name: "establishments_registrationId_fkey",
     references: {
       table: "registrations",
-      field: "id"
+      field: "id",
     },
     onUpdate: "cascade",
     onDelete: setting,
-    transaction: t
+    transaction: t,
   });
 
 const dropMetadataForeignKey = (queryInterface, t) =>
   queryInterface.removeConstraint("metadata", "metadata_registrationId_fkey", {
-    transaction: t
+    transaction: t,
   });
 
 const recreateMetadataForeignKey = (queryInterface, t, setting) =>
@@ -31,11 +31,11 @@ const recreateMetadataForeignKey = (queryInterface, t, setting) =>
     name: "metadata_registrationId_fkey",
     references: {
       table: "registrations",
-      field: "id"
+      field: "id",
     },
     onUpdate: "cascade",
     onDelete: setting,
-    transaction: t
+    transaction: t,
   });
 
 const dropOperatorsForeignKey = (queryInterface, t) =>
@@ -51,16 +51,16 @@ const recreateOperatorsForeignKey = (queryInterface, t, setting) =>
     name: "operators_establishmentId_fkey",
     references: {
       table: "establishments",
-      field: "id"
+      field: "id",
     },
     onUpdate: "cascade",
     onDelete: setting,
-    transaction: t
+    transaction: t,
   });
 
 const dropPremisesForeignKey = (queryInterface, t) =>
   queryInterface.removeConstraint("premises", "premises_establishmentId_fkey", {
-    transaction: t
+    transaction: t,
   });
 
 const recreatePremisesForeignKey = (queryInterface, t, setting) =>
@@ -69,11 +69,11 @@ const recreatePremisesForeignKey = (queryInterface, t, setting) =>
     name: "premises_establishmentId_fkey",
     references: {
       table: "establishments",
-      field: "id"
+      field: "id",
     },
     onUpdate: "cascade",
     onDelete: setting,
-    transaction: t
+    transaction: t,
   });
 
 const dropActivitiesForeignKey = (queryInterface, t) =>
@@ -89,16 +89,16 @@ const recreateActivitiesForeignKey = (queryInterface, t, setting) =>
     name: "activities_establishmentId_fkey",
     references: {
       table: "establishments",
-      field: "id"
+      field: "id",
     },
     onUpdate: "cascade",
     onDelete: setting,
-    transaction: t
+    transaction: t,
   });
 
 module.exports = {
-  up: queryInterface => {
-    return queryInterface.sequelize.transaction(t => {
+  up: (queryInterface) => {
+    return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         dropEstablishmentsForeignKey(queryInterface, t).then(() =>
           recreateEstablishmentsForeignKey(queryInterface, t, "cascade")
@@ -114,12 +114,12 @@ module.exports = {
         ),
         dropActivitiesForeignKey(queryInterface, t).then(() =>
           recreateActivitiesForeignKey(queryInterface, t, "cascade")
-        )
+        ),
       ]);
     });
   },
-  down: queryInterface => {
-    return queryInterface.sequelize.transaction(t => {
+  down: (queryInterface) => {
+    return queryInterface.sequelize.transaction((t) => {
       return Promise.all([
         dropEstablishmentsForeignKey(queryInterface, t).then(() =>
           recreateEstablishmentsForeignKey(queryInterface, t, "set null")
@@ -135,8 +135,8 @@ module.exports = {
         ),
         dropActivitiesForeignKey(queryInterface, t).then(() =>
           recreateActivitiesForeignKey(queryInterface, t, "set null")
-        )
+        ),
       ]);
     });
-  }
+  },
 };

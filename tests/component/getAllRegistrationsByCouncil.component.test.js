@@ -11,7 +11,7 @@ describe("GET to /api/registrations/:lc", () => {
       // await resetDB();
       const requestOptions = {
         uri: url,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -26,7 +26,7 @@ describe("GET to /api/registrations/:lc", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}?new=alskdfj`,
-        json: true
+        json: true,
       };
       try {
         await request(requestOptions);
@@ -49,7 +49,7 @@ describe("GET to /api/registrations/:lc", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: url,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -65,7 +65,7 @@ describe("GET to /api/registrations/:lc", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}?fields=establishment,metadata`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -83,7 +83,7 @@ describe("GET to /api/registrations/:lc", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}?new=false`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -100,8 +100,8 @@ describe("GET to /api/registrations/:lc", () => {
         uri: `${url}`,
         json: true,
         headers: {
-          "double-mode": "success"
-        }
+          "double-mode": "success",
+        },
       };
       response = await request(requestOptions);
     });

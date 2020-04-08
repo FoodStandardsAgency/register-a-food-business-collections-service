@@ -2,7 +2,7 @@ const { info } = require("winston");
 const db = require("./models");
 
 function sleep(millis) {
-  return new Promise(resolve => setTimeout(resolve, millis));
+  return new Promise((resolve) => setTimeout(resolve, millis));
 }
 
 const loop = async () => {

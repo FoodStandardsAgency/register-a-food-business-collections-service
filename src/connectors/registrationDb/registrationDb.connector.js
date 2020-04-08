@@ -7,7 +7,7 @@ const {
   Premise,
   Registration,
   Council,
-  connectToDb
+  connectToDb,
 } = require("../../db/db");
 const { logEmitter } = require("../../services/logging.service");
 
@@ -29,68 +29,68 @@ const convertJSDateToISODate = () => {
   return isoDate;
 };
 
-const getEstablishmentByRegId = async id => {
+const getEstablishmentByRegId = async (id) => {
   return modelFindOne(
     {
       where: { registrationId: id },
-      attributes: { exclude: ["registrationId"] }
+      attributes: { exclude: ["registrationId"] },
     },
     Establishment,
     "getEstablishmentByRegId"
   );
 };
 
-const getDeclarationByRegId = async id => {
+const getDeclarationByRegId = async (id) => {
   return modelFindOne(
     {
       where: { registrationId: id },
-      attributes: { exclude: ["id", "registrationId"] }
+      attributes: { exclude: ["id", "registrationId"] },
     },
     Declaration,
     "getDeclarationByRegId"
   );
 };
 
-const getOperatorByEstablishmentId = async id => {
+const getOperatorByEstablishmentId = async (id) => {
   return modelFindOne(
     {
       where: { establishmentId: id },
       include: [
         {
           model: Partner,
-          as: "partners"
-        }
+          as: "partners",
+        },
       ],
-      attributes: { exclude: ["id", "establishmentId"] }
+      attributes: { exclude: ["id", "establishmentId"] },
     },
     Operator,
     "getOperatorByEstablishmentId"
   );
 };
 
-const getPremiseByEstablishmentId = async id => {
+const getPremiseByEstablishmentId = async (id) => {
   return modelFindOne(
     {
       where: { establishmentId: id },
-      attributes: { exclude: ["id", "establishmentId"] }
+      attributes: { exclude: ["id", "establishmentId"] },
     },
     Premise,
     "getPremiseByEstablishmentId"
   );
 };
 
-const getActivitiesByEstablishmentId = async id => {
+const getActivitiesByEstablishmentId = async (id) => {
   return modelFindOne(
     {
       where: { establishmentId: id },
-      attributes: { exclude: ["id", "establishmentId"] }
+      attributes: { exclude: ["id", "establishmentId"] },
     },
     Activities,
     "getActivitiesByEstablishmentId"
   );
 };
 
-const getCouncilByRegCouncil = async council => {
+const getCouncilByRegCouncil = async (council) => {
   return modelFindOne(
     { where: { local_council_url: council } },
     Council,
@@ -116,9 +116,9 @@ const getRegistrationTableByCouncil = async (
         collected,
         createdAt: {
           [Op.lt]: before,
-          [Op.gte]: after
-        }
-      }
+          [Op.gte]: after,
+        },
+      },
     });
     logEmitter.emit(
       "functionSuccess",
@@ -148,9 +148,9 @@ const getRegistrationTable = async (before, after) => {
       where: {
         createdAt: {
           [Op.lt]: before,
-          [Op.gte]: after
-        }
-      }
+          [Op.gte]: after,
+        },
+      },
     });
     logEmitter.emit(
       "functionSuccess",
@@ -169,12 +169,12 @@ const getRegistrationTable = async (before, after) => {
   }
 };
 
-const getFullEstablishment = async id => {
+const getFullEstablishment = async (id) => {
   const establishment = await getEstablishmentByRegId(id);
   const [operator, activities, premise] = await Promise.all([
     getOperatorByEstablishmentId(establishment && establishment.id),
     getActivitiesByEstablishmentId(establishment && establishment.id),
-    getPremiseByEstablishmentId(establishment && establishment.id)
+    getPremiseByEstablishmentId(establishment && establishment.id),
   ]);
 
   let operatorNew = {};
@@ -208,7 +208,7 @@ const getFullEstablishment = async id => {
   );
 };
 
-const getFullDeclaration = async id => {
+const getFullDeclaration = async (id) => {
   const metadata = await getDeclarationByRegId(id);
 
   return metadata ? metadata.dataValues : {};
@@ -241,7 +241,7 @@ const getSingleRegistration = async (fsa_rn, council) => {
   }
   const fullRegistration = await getFullRegistration(registration, [
     "establishment",
-    "metadata"
+    "metadata",
   ]);
   logEmitter.emit(
     "functionSuccess",
@@ -256,13 +256,13 @@ const getFullRegistration = async (registration, fields = []) => {
   const {
     competent_authority_id,
     local_council_full_name,
-    local_council_url
+    local_council_url,
   } = await getCouncilByRegCouncil(registration.dataValues.council);
   const {
     collected,
     collected_at,
     createdAt,
-    updatedAt
+    updatedAt,
   } = registration.dataValues;
   const establishment = fields.includes("establishment")
     ? await getFullEstablishment(registration.id)
@@ -279,7 +279,7 @@ const getFullRegistration = async (registration, fields = []) => {
     {
       council: local_council_full_name,
       competent_authority_id,
-      local_council_url
+      local_council_url,
     },
     { collected, collected_at, createdAt, updatedAt },
     { establishment },
@@ -308,7 +308,7 @@ const getUnifiedRegistrations = async (
   );
 
   const registrationFullPromises = [];
-  registrations.forEach(registration => {
+  registrations.forEach((registration) => {
     registrationFullPromises.push(getFullRegistration(registration, fields));
   });
   const fullRegistrationsWithCouncil = await Promise.all(
@@ -348,7 +348,7 @@ const getAllRegistrationsByCouncil = async (
     after
   );
 
-  registrations.forEach(registration => {
+  registrations.forEach((registration) => {
     registrationPromises.push(getFullRegistration(registration, fields));
   });
   const fullRegistrations = await Promise.all(registrationPromises);
@@ -377,13 +377,13 @@ const updateRegistrationCollectedByCouncil = async (
   const response = await Registration.update(
     {
       collected,
-      collected_at: isoDate
+      collected_at: isoDate,
     },
     {
       where: {
         fsa_rn,
-        council
-      }
+        council,
+      },
     }
   );
 
@@ -410,5 +410,5 @@ module.exports = {
   getUnifiedRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
 };

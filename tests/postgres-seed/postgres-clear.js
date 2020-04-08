@@ -2,7 +2,7 @@ require("dotenv").config();
 const {
   Registration,
   connectToDb,
-  closeConnection
+  closeConnection,
 } = require("../../src/db/db");
 
 const clearTables = async () => {

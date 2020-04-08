@@ -31,7 +31,7 @@ const addNewColumns = async (queryInterface, Sequelize, transaction) => {
         "premises",
         "establishment_address_line_3",
         Sequelize.STRING
-      )
+      ),
     ]),
     { transaction: transaction }
   );
@@ -47,7 +47,7 @@ const copyData = async (queryInterface, transaction) => {
       "UPDATE premises SET establishment_address_line_2 = establishment_street",
       "UPDATE premises SET establishment_address_line_3 = establishment_dependent_locality",
       { transaction: transaction }
-    )
+    ),
   ]);
 };
 
@@ -71,7 +71,7 @@ const removeNewColumns = async (queryInterface, transaction) => {
       queryInterface.removeColumn("operators", "operator_address_line_3"),
       queryInterface.removeColumn("premises", "establishment_address_line_1"),
       queryInterface.removeColumn("premises", "establishment_address_line_2"),
-      queryInterface.removeColumn("premises", "establishment_address_line_3")
+      queryInterface.removeColumn("premises", "establishment_address_line_3"),
     ]),
     { transaction: transaction }
   );
@@ -87,7 +87,7 @@ const recopyData = async (queryInterface, transaction) => {
       "UPDATE premises SET establishment_street = establishment_address_line_2",
       "UPDATE premises SET establishment_dependent_locality = establishment_address_line_3",
       { transaction: transaction }
-    )
+    ),
   ]);
 };
 const addOldColumns = async (queryInterface, Sequelize, transaction) => {
@@ -122,7 +122,7 @@ const addOldColumns = async (queryInterface, Sequelize, transaction) => {
         "premises",
         "establishment_dependent_locality",
         Sequelize.STRING
-      )
+      ),
     ]),
     { transaction: transaction }
   );
@@ -130,17 +130,17 @@ const addOldColumns = async (queryInterface, Sequelize, transaction) => {
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(async transaction => {
+    return queryInterface.sequelize.transaction(async (transaction) => {
       await addNewColumns(queryInterface, Sequelize, transaction);
       await copyData(queryInterface, transaction);
       return removeOldColumns(queryInterface, transaction);
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.sequelize.transaction(async transaction => {
+    return queryInterface.sequelize.transaction(async (transaction) => {
       await addOldColumns(queryInterface, Sequelize, transaction);
       await recopyData(queryInterface, transaction);
       return removeNewColumns(queryInterface, transaction);
     });
-  }
+  },
 };

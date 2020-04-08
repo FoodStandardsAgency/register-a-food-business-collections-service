@@ -22,8 +22,8 @@ describe("Retrieve all registrations through API", () => {
         json: true,
         resolveWithFullResponse: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": unifiedAPIKey
-        }
+          "Ocp-Apim-Subscription-Key": unifiedAPIKey,
+        },
       };
       response = await request(requestOptions);
     });
@@ -49,11 +49,11 @@ describe("Retrieve all registrations through API", () => {
         json: true,
         resolveWithFullResponse: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": "unifiedAPIKeyWhichIsWrong"
-        }
+          "Ocp-Apim-Subscription-Key": "unifiedAPIKeyWhichIsWrong",
+        },
       };
 
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -74,10 +74,10 @@ describe("Retrieve all registrations through API", () => {
         uri: `${unifiedUrl}?before=${before.toISOString()}&after=${after.toISOString()}&env=${
           process.env.NODE_ENV
         }`,
-        json: true
+        json: true,
       };
 
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -100,10 +100,10 @@ describe("Retrieve all registrations through API", () => {
         }`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": unifiedAPIKey
-        }
+          "Ocp-Apim-Subscription-Key": unifiedAPIKey,
+        },
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });

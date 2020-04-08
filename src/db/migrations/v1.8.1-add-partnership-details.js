@@ -5,32 +5,32 @@ module.exports = {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
       },
       createdAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       updatedAt: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
       },
       partner_name: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       partner_is_primary_contact: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
       },
       operatorId: {
         type: Sequelize.INTEGER,
         references: {
           model: "operators",
-          key: "id"
+          key: "id",
         },
         onUpdate: "cascade",
-        onDelete: "cascade"
-      }
+        onDelete: "cascade",
+      },
     });
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return queryInterface.dropTable("partners");
-  }
+  },
 };

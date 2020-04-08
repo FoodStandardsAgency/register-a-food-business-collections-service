@@ -3,31 +3,31 @@ jest.mock("../../services/logging.service");
 const { isISO8601 } = require("validator");
 jest.mock("../../db/db", () => ({
   Activities: {
-    findOne: jest.fn()
+    findOne: jest.fn(),
   },
   Establishment: {
-    findOne: jest.fn()
+    findOne: jest.fn(),
   },
   Declaration: {
-    findOne: jest.fn()
+    findOne: jest.fn(),
   },
   Operator: {
-    findOne: jest.fn()
+    findOne: jest.fn(),
   },
   Premise: {
-    findOne: jest.fn()
+    findOne: jest.fn(),
   },
   Registration: {
     findOne: jest.fn(),
     findAll: jest.fn(),
-    update: jest.fn()
+    update: jest.fn(),
   },
   Council: {
     findOne: jest.fn(),
-    findAll: jest.fn()
+    findAll: jest.fn(),
   },
   connectToDb: jest.fn(),
-  closeConnection: jest.fn()
+  closeConnection: jest.fn(),
 }));
 
 const {
@@ -37,14 +37,14 @@ const {
   Operator,
   Premise,
   Registration,
-  Council
+  Council,
 } = require("../../db/db");
 
 const {
   getUnifiedRegistrations,
   getAllRegistrationsByCouncil,
   getSingleRegistration,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
 } = require("./registrationDb.connector");
 
 describe("collect.service", () => {
@@ -58,35 +58,35 @@ describe("collect.service", () => {
       beforeEach(() => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
 
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { operator_name: "fred" }
+          dataValues: { operator_name: "fred" },
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { business_type: "cookies" }
+          dataValues: { business_type: "cookies" },
         }));
         Premise.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
+          dataValues: { establishment_postcode: "ER1 56GF" },
         }));
         Declaration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
         result = getAllRegistrationsByCouncil("cardiff", "true");
       });
 
       it("should call registration.findAll with queryArray [false, null]", () => {
         expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
-          false
+          false,
         ]);
       });
     });
@@ -95,28 +95,28 @@ describe("collect.service", () => {
       beforeEach(() => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
 
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { operator_name: "fred" }
+          dataValues: { operator_name: "fred" },
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { business_type: "cookies" }
+          dataValues: { business_type: "cookies" },
         }));
         Premise.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
+          dataValues: { establishment_postcode: "ER1 56GF" },
         }));
         Declaration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
         result = getAllRegistrationsByCouncil("cardiff", "false");
       });
@@ -124,7 +124,7 @@ describe("collect.service", () => {
       it("should call registration.findAll with queryArray [true, false, null]", () => {
         expect(Registration.findAll.mock.calls[0][0].where.collected).toEqual([
           true,
-          false
+          false,
         ]);
       });
     });
@@ -150,12 +150,12 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
         Activities.findOne.mockImplementation(() => {
           throw new Error("Failed");
@@ -163,7 +163,7 @@ describe("collect.service", () => {
 
         try {
           await getAllRegistrationsByCouncil("west-dorset", false, [
-            "establishment"
+            "establishment",
           ]);
         } catch (err) {
           result = err;
@@ -179,12 +179,12 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
         result = await getAllRegistrationsByCouncil("cardiff", true, []);
       });
@@ -202,36 +202,36 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: {
             operator_name: "fred",
-            operator_address_line_1: "test"
-          }
+            operator_address_line_1: "test",
+          },
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { business_type: "cookies" }
+          dataValues: { business_type: "cookies" },
         }));
         Premise.findOne.mockImplementation(() => ({
           id: 1,
           dataValues: {
             establishment_postcode: "ER1 56GF",
-            establishment_address_line_1: "etest"
-          }
+            establishment_address_line_1: "etest",
+          },
         }));
         Declaration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
         result = await getAllRegistrationsByCouncil("cardiff", true, [
-          "establishment"
+          "establishment",
         ]);
       });
       it("should return just the establishment, operator, premise, activities fields", () => {
@@ -255,14 +255,14 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Declaration.findOne.mockImplementation(async () => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
         result = await getAllRegistrationsByCouncil("cardiff", true, [
-          "metadata"
+          "metadata",
         ]);
       });
       it("should return just the declaration fields", () => {
@@ -365,11 +365,11 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { fsa_rn: "1234" }
+          dataValues: { fsa_rn: "1234" },
         }));
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
@@ -377,22 +377,22 @@ describe("collect.service", () => {
             operator_name: "fred",
             partners: [
               {
-                partner_name: "Darleene"
-              }
-            ]
-          }
+                partner_name: "Darleene",
+              },
+            ],
+          },
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { business_type: "cookies" }
+          dataValues: { business_type: "cookies" },
         }));
         Premise.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
+          dataValues: { establishment_postcode: "ER1 56GF" },
         }));
         Declaration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
 
         result = await getSingleRegistration("1234", "west-dorset");
@@ -415,12 +415,12 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234", council: "area" } },
-          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } }
+          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
 
         result = await getUnifiedRegistrations(
@@ -439,12 +439,12 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234", council: "area" } },
-          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } }
+          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
         result = await getUnifiedRegistrations(
           "2019-01-01T13:00:00Z",
@@ -467,32 +467,32 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234", council: "area" } },
-          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } }
+          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { operator_name: "fred" }
+          dataValues: { operator_name: "fred" },
         }));
         Activities.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { business_type: "cookies" }
+          dataValues: { business_type: "cookies" },
         }));
         Premise.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_postcode: "ER1 56GF" }
+          dataValues: { establishment_postcode: "ER1 56GF" },
         }));
         Declaration.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
 
         result = await getUnifiedRegistrations(
@@ -514,7 +514,7 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Establishment.findOne.mockImplementation(() => null);
         Operator.findOne.mockImplementation(() => null);
@@ -541,11 +541,11 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234" } },
-          { id: 2, dataValues: { fsa_rn: "5678" } }
+          { id: 2, dataValues: { fsa_rn: "5678" } },
         ]);
         Establishment.findOne.mockImplementation(() => ({
           id: 1,
-          dataValues: { establishment_trading_name: "taco" }
+          dataValues: { establishment_trading_name: "taco" },
         }));
         Operator.findOne.mockImplementation(() => null);
         Activities.findOne.mockImplementation(() => null);
@@ -571,16 +571,16 @@ describe("collect.service", () => {
       beforeEach(async () => {
         Registration.findAll.mockImplementation(() => [
           { id: 1, dataValues: { fsa_rn: "1234", council: "area" } },
-          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } }
+          { id: 2, dataValues: { fsa_rn: "5678", council: "area" } },
         ]);
         Council.findOne.mockImplementation(() => ({
           local_council_full_name: "Area Council",
           competent_authority_id: "5678",
-          local_council_url: "area"
+          local_council_url: "area",
         }));
         Declaration.findOne.mockImplementation(async () => ({
           id: 1,
-          dataValues: { declaration1: "yes" }
+          dataValues: { declaration1: "yes" },
         }));
         result = await getUnifiedRegistrations(
           "2019-01-01T13:00:00Z",

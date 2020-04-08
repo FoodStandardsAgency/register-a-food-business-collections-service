@@ -83,10 +83,10 @@ module.exports = {
         "operators",
         "contact_representative_email",
         Sequelize.STRING
-      )
+      ),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeColumn(
         "establishments",
@@ -111,7 +111,7 @@ module.exports = {
       queryInterface.removeColumn("operators", "contact_representative_name"),
       queryInterface.removeColumn("operators", "contact_representative_role"),
       queryInterface.removeColumn("operators", "contact_representative_number"),
-      queryInterface.removeColumn("operators", "contact_representative_email")
+      queryInterface.removeColumn("operators", "contact_representative_email"),
     ]);
-  }
+  },
 };

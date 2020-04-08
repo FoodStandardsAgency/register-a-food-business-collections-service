@@ -11,16 +11,16 @@ module.exports = {
         "premises",
         "establishment_dependent_locality",
         Sequelize.STRING
-      )
+      ),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeColumn("operators", "operator_dependent_locality"),
       queryInterface.removeColumn(
         "premises",
         "establishment_dependent_locality"
-      )
+      ),
     ]);
-  }
+  },
 };

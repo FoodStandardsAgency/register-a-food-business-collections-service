@@ -41,7 +41,7 @@ const doubleResponse = [
         contact_representative_email: null,
         createdAt: "2018-10-30T14:51:47.327Z",
         updatedAt: "2018-10-30T14:51:47.327Z",
-        establishmentId: 68
+        establishmentId: 68,
       },
       activities: {
         id: 62,
@@ -68,7 +68,7 @@ const doubleResponse = [
         opening_hours_sunday: "From 9:30 to 19:00",
         createdAt: "2018-10-30T14:51:47.332Z",
         updatedAt: "2018-10-30T14:51:47.332Z",
-        establishmentId: 68
+        establishmentId: 68,
       },
       premise: {
         id: 62,
@@ -80,8 +80,8 @@ const doubleResponse = [
         establishment_type: "Place",
         createdAt: "2018-10-30T14:51:47.339Z",
         updatedAt: "2018-10-30T14:51:47.339Z",
-        establishmentId: 68
-      }
+        establishmentId: 68,
+      },
     },
     metadata: {
       id: 62,
@@ -90,14 +90,14 @@ const doubleResponse = [
       declaration3: "Declaration",
       createdAt: "2018-10-30T14:51:47.352Z",
       updatedAt: "2018-10-30T14:51:47.352Z",
-      registrationId: 69
-    }
-  }
+      registrationId: 69,
+    },
+  },
 ];
 
 const updateResponse = { fsa_rn: "1234", collected: true };
 
-const registrationDbDouble = double_mode => {
+const registrationDbDouble = (double_mode) => {
   if (double_mode === "success") {
     return doubleResponse;
   } else if (double_mode === "fail") {

@@ -36,10 +36,10 @@ module.exports = {
         "activities",
         "opening_hours_sunday",
         Sequelize.STRING
-      )
+      ),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeColumn("activities", "opening_hours_monday"),
       queryInterface.removeColumn("activities", "opening_hours_tuesday"),
@@ -47,7 +47,7 @@ module.exports = {
       queryInterface.removeColumn("activities", "opening_hours_thursday"),
       queryInterface.removeColumn("activities", "opening_hours_friday"),
       queryInterface.removeColumn("activities", "opening_hours_saturday"),
-      queryInterface.removeColumn("activities", "opening_hours_sunday")
+      queryInterface.removeColumn("activities", "opening_hours_sunday"),
     ]);
-  }
+  },
 };

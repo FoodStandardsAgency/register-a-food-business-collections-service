@@ -27,5 +27,5 @@ module.exports = {
   Council: db.council,
   db,
   connectToDb,
-  closeConnection
+  closeConnection,
 };

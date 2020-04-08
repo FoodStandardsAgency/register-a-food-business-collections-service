@@ -3,7 +3,7 @@ jest.mock("../../connectors/registrationDb/registrationDb.connector", () => ({
   getUnifiedRegistrations: jest.fn(),
   getSingleRegistration: jest.fn(),
   updateRegistrationCollectedByCouncil: jest.fn(),
-  registrationDbDouble: jest.fn()
+  registrationDbDouble: jest.fn(),
 }));
 
 jest.mock("../../services/logging.service");
@@ -15,14 +15,14 @@ const {
   getAllRegistrationsByCouncil,
   getSingleRegistration,
   getUnifiedRegistrations,
-  updateRegistrationCollectedByCouncil
+  updateRegistrationCollectedByCouncil,
 } = require("../../connectors/registrationDb/registrationDb.connector");
 
 const {
   getRegistrationsByCouncil,
   getRegistration,
   getRegistrations,
-  updateRegistration
+  updateRegistration,
 } = require("./registrations.controller");
 
 describe("registrations.controller", () => {
@@ -33,7 +33,7 @@ describe("registrations.controller", () => {
         try {
           validateOptions.mockImplementation(() => false);
           await getRegistrationsByCouncil({
-            getNewRegistrations: "not a boolean"
+            getNewRegistrations: "not a boolean",
           });
         } catch (err) {
           result = err;
@@ -49,7 +49,7 @@ describe("registrations.controller", () => {
         validateOptions.mockImplementation(() => true);
         result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
-          double_mode: "success"
+          double_mode: "success",
         });
       });
       it("Should return the double response", () => {
@@ -60,11 +60,11 @@ describe("registrations.controller", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
         getAllRegistrationsByCouncil.mockImplementation(() => [
-          { id: 1, data: "data" }
+          { id: 1, data: "data" },
         ]);
         result = await getRegistrationsByCouncil({
           getNewRegistrations: "true",
-          council: "cardiff"
+          council: "cardiff",
         });
       });
 
@@ -93,7 +93,7 @@ describe("registrations.controller", () => {
       beforeEach(async () => {
         validateOptions.mockImplementation(() => true);
         result = await getRegistration({
-          double_mode: "single"
+          double_mode: "single",
         });
       });
       it("Should return the double response", () => {
@@ -105,11 +105,11 @@ describe("registrations.controller", () => {
         validateOptions.mockImplementation(() => true);
         getSingleRegistration.mockImplementation(() => ({
           id: 1,
-          data: "data"
+          data: "data",
         }));
         result = await getRegistration({
           getNewRegistrations: "true",
-          council: "cardiff"
+          council: "cardiff",
         });
       });
 
@@ -139,7 +139,7 @@ describe("registrations.controller", () => {
         validateOptions.mockImplementation(() => true);
         result = await updateRegistration({
           collected: true,
-          double_mode: "update"
+          double_mode: "update",
         });
       });
       it("Should return the double response", () => {
@@ -151,11 +151,11 @@ describe("registrations.controller", () => {
         validateOptions.mockImplementation(() => true);
         updateRegistrationCollectedByCouncil.mockImplementation(() => ({
           fsa_rn: "5768",
-          collected: true
+          collected: true,
         }));
         result = await updateRegistration({
           collected: true,
-          fsa_rn: "5768"
+          fsa_rn: "5768",
         });
       });
       it("Should return the response of updateRegistrationCollected", () => {
@@ -185,7 +185,7 @@ describe("registrations.controller", () => {
         result = await getRegistrations({
           before: "2019-01-01",
           after: "2019-02-01",
-          double_mode: "success"
+          double_mode: "success",
         });
       });
       it("Should return the double response", () => {
@@ -198,12 +198,12 @@ describe("registrations.controller", () => {
         getUnifiedRegistrations.mockImplementation(() => [
           {
             fsa_rn: "5768",
-            collected: true
-          }
+            collected: true,
+          },
         ]);
         result = await getRegistrations({
           before: "2019-01-01",
-          after: "2019-02-01"
+          after: "2019-02-01",
         });
       });
       it("Should return the response", () => {

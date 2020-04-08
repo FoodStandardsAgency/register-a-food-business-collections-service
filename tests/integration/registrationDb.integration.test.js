@@ -1,7 +1,7 @@
 const {
   getRegistrations,
   getRegistration,
-  updateRegistration
+  updateRegistration,
 } = require("../../src/api/registrations/registrations.controller");
 
 describe("registrationDb.connector integration: getAllRegistrations", () => {

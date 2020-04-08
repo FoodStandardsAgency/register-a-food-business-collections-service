@@ -13,8 +13,8 @@ describe("Update single registration through API", () => {
       uri: `${cardiffUrl}?env=${process.env.NODE_ENV}`,
       json: true,
       headers: {
-        "Ocp-Apim-Subscription-Key": cardiffAPIKey
-      }
+        "Ocp-Apim-Subscription-Key": cardiffAPIKey,
+      },
     };
     availableRegistrations = await request(requestOptions);
   });
@@ -23,17 +23,15 @@ describe("Update single registration through API", () => {
     let response;
     beforeEach(async () => {
       const update = {
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
-          process.env.NODE_ENV
-        }`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${process.env.NODE_ENV}`,
         json: true,
         method: "put",
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
         },
         body: {
-          collected: true
-        }
+          collected: true,
+        },
       };
       response = await request(update);
     });
@@ -49,18 +47,16 @@ describe("Update single registration through API", () => {
     beforeEach(async () => {
       const requestOptions = {
         method: "put",
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
-          process.env.NODE_ENV
-        }`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${process.env.NODE_ENV}`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
         },
         body: {
-          incorrect: "true"
-        }
+          incorrect: "true",
+        },
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });
@@ -77,17 +73,15 @@ describe("Update single registration through API", () => {
     let response;
     beforeEach(async () => {
       const update = {
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
-          process.env.NODE_ENV
-        }`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${process.env.NODE_ENV}`,
         json: true,
         method: "put",
         headers: {
-          "Ocp-Apim-Subscription-Key": cardiffAPIKey
+          "Ocp-Apim-Subscription-Key": cardiffAPIKey,
         },
         body: {
-          collected: false
-        }
+          collected: false,
+        },
       };
       response = await request(update);
     });
@@ -103,18 +97,16 @@ describe("Update single registration through API", () => {
     beforeEach(async () => {
       const requestOptions = {
         method: "put",
-        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${
-          process.env.NODE_ENV
-        }`,
+        uri: `${cardiffUrl}/${availableRegistrations[0].fsa_rn}?env=${process.env.NODE_ENV}`,
         json: true,
         headers: {
-          "Ocp-Apim-Subscription-Key": "incorrectKey"
+          "Ocp-Apim-Subscription-Key": "incorrectKey",
         },
         body: {
-          collected: true
-        }
+          collected: true,
+        },
       };
-      await request(requestOptions).catch(function(body) {
+      await request(requestOptions).catch(function (body) {
         response = body;
       });
     });

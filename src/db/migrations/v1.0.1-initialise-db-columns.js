@@ -63,10 +63,10 @@ module.exports = {
         "establishment_type",
         Sequelize.STRING
       ),
-      queryInterface.addColumn("registrations", "fsa_rn", Sequelize.STRING)
+      queryInterface.addColumn("registrations", "fsa_rn", Sequelize.STRING),
     ]);
   },
-  down: queryInterface => {
+  down: (queryInterface) => {
     return Promise.all([
       queryInterface.removeColumn("activities", "customer_type"),
       queryInterface.removeColumn("activities", "business_type"),
@@ -90,7 +90,7 @@ module.exports = {
       queryInterface.removeColumn("premises", "establishment_street"),
       queryInterface.removeColumn("premises", "establishment_town"),
       queryInterface.removeColumn("premises", "establishment_postcode"),
-      queryInterface.removeColumn("premises", "establishment_type")
+      queryInterface.removeColumn("premises", "establishment_type"),
     ]);
-  }
+  },
 };

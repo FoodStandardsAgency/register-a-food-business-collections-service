@@ -14,7 +14,7 @@ describe("GET to /api/registrations/unified", () => {
 
       const requestOptions = {
         uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -35,7 +35,7 @@ describe("GET to /api/registrations/unified", () => {
 
       const requestOptions = {
         uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -56,7 +56,7 @@ describe("GET to /api/registrations/unified", () => {
 
       const requestOptions = {
         uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
-        json: true
+        json: true,
       };
       response = await request(requestOptions);
     });
@@ -78,8 +78,8 @@ describe("GET to /api/registrations/unified", () => {
         uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
         json: true,
         headers: {
-          "double-mode": "success"
-        }
+          "double-mode": "success",
+        },
       };
       response = await request(requestOptions);
     });
@@ -99,7 +99,7 @@ describe("GET to /api/registrations/unified", () => {
 
       const requestOptions = {
         uri: `${url}?before=${before.toISOString()}&after=${after.toISOString()}`,
-        json: true
+        json: true,
       };
       try {
         await request(requestOptions);
@@ -122,7 +122,7 @@ describe("GET to /api/registrations/unified", () => {
     beforeEach(async () => {
       const requestOptions = {
         uri: `${url}`,
-        json: true
+        json: true,
       };
       try {
         await request(requestOptions);
