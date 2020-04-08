@@ -5,6 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "test": "jest ./src --coverage",
+    "test:raw": "export TEST_TYPE=unit && jest",
     "test:unit:ci": "export TEST_TYPE=unit && jest ./src --coverage",
     "test:component": "npm run reset-postgres && jest ./tests/component/*.js --runInBand",
     "test:component:ci": "export TEST_TYPE=component && jest ./tests/component/*.js --runInBand",
