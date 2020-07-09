@@ -390,8 +390,7 @@
         "properties": {
           "establishment_trading_name": {
             "maximum": 255,
-            "type": "string",
-            "description": "ASCII string."
+            "type": "string"
           },
           "establishment_primary_number": {
             "maximum": 20,
@@ -432,12 +431,12 @@
           "operator_first_name": {
             "maximum": 255,
             "type": "string",
-            "description": "ASCII string - Required if operator_type is Sole trader', 'Partnership', or A person (registered by a representative)'."
+            "description": "Required if operator_type is Sole trader', 'Partnership', or A person (registered by a representative)'."
           },
           "operator_last_name": {
             "maximum": 255,
             "type": "string",
-            "description": "ASCII string - required if operator_type is 'Sole trader', 'Partnership', or A person (registered by a representative)'."
+            "description": "Required if operator_type is 'Sole trader', 'Partnership', or A person (registered by a representative)'."
           },
           "operator_postcode": {
             "type": "string",
@@ -503,7 +502,7 @@
           "contact_representative_name": {
             "maximum": 255,
             "type": "string",
-            "description": "ASCII string - requried if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
+            "description": "Requried if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
           },
           "contact_representative_role": {
             "maximum": 255,
@@ -511,9 +510,10 @@
             "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
           },
           "contact_representative_number": {
-            "maximum": 255,
+            "maximum": 20,
+            "minimum": 5,
             "type": "string",
-            "description": "ASCII string - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
+            "description": "Numeric string. Blank spaces and + allowed - Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
           },
           "contact_representative_email": {
             "maximum": 255,
@@ -525,7 +525,7 @@
             "description": "Possible values: 'Sole trader', 'Partnership', 'A person (registered by a representative)' 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
           },
           "operator_company_name": {
-            "maximum": 50,
+            "maximum": 255,
             "type": "string",
             "description": "Required if operator_type is 'A company (registered by a representative)'."
           },
@@ -536,13 +536,13 @@
             "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), first two characters can be letters - Required if operator_type is 'A company (registered by a representative)'."
           },
           "operator_charity_name": {
-            "maximum": 50,
+            "maximum": 255,
             "type": "string",
             "description": "Required if operator_type is 'A charity (registered by a representative)'."
           },
           "operator_charity_number": {
             "maximum": 8,
-            "minimum": 6,
+            "minimum": 8,
             "type": "string",
             "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isAlphanumeric (GB), allows ''-'' -  Required if operator_type is 'A charity (registered by a representative)'."
           },
@@ -559,8 +559,9 @@
         "type": "object",
         "properties": {
           "partner_name": {
+            "maximum": 255,
             "type": "string",
-            "description": "ASCII string."
+            "description": "Required if operator_type is 'Partnership'."
           },
           "partner_is_primary_contact": {
             "type": "boolean",
