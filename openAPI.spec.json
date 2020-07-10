@@ -502,7 +502,7 @@
           "contact_representative_name": {
             "maximum": 255,
             "type": "string",
-            "description": "Requried if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
+            "description": "Required if operator_type is 'A company (registered by a representative)' or 'A charity (registered by a representative)'."
           },
           "contact_representative_role": {
             "maximum": 255,

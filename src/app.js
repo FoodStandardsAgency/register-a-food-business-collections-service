@@ -8,7 +8,7 @@ if (
   process.env["APPINSIGHTS_INSTRUMENTATIONKEY"] !== ""
 ) {
   appInsights.setup().start();
-  appInsights.defaultClient.addTelemetryProcessor(envelope => {
+  appInsights.defaultClient.addTelemetryProcessor((envelope) => {
     envelope.tags["ai.cloud.role"] = packageJson.name;
   });
 }
