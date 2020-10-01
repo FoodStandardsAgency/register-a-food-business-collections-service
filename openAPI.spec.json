@@ -203,7 +203,7 @@
             }
           },
           "400": {
-            "description": "Bad request, invalid options."
+            "description": "Bad request."
           },
           "404": {
             "description": "Resource not found."
@@ -395,12 +395,6 @@
         "properties": {
           "fsa_rn": {
             "$ref": "#/components/schemas/fsa_rn"
-          },
-          "createdAt": {
-            "$ref": "#/components/schema/createdAt"
-          },
-          "updatedAt": {
-            "$ref": "#/components/schema/updatedAt"
           },
           "establishment": {
             "$ref": "#/components/schemas/DirectEstablishment"
@@ -851,6 +845,7 @@
 	  "DirectOperator": {
         "required": [
           "operator_address_line_1",
+          "operator_town",
           "operator_type",
           "operator_postcode"
         ],
@@ -985,7 +980,8 @@
 	  "DirectPremise": {
         "required": [
           "establishment_postcode",
-          "establishment_address_line_1"
+          "establishment_address_line_1",
+          "establishment_town"
         ],
         "type": "object",
         "properties": {
