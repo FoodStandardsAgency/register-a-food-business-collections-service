@@ -23,6 +23,7 @@ const doubleResponse = [
       establishment_primary_number: "329857245",
       establishment_secondary_number: "84345245",
       establishment_email: "django@email.com",
+      establishment_web_address: "test.com",
       createdAt: "2018-10-30T14:51:47.321Z",
       updatedAt: "2018-10-30T14:51:47.321Z",
       registrationId: 69,

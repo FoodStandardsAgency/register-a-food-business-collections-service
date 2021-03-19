@@ -511,6 +511,11 @@
             "type": "string",
             "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isEmail."
           },
+          "establishment_web_address": {
+            "maximum": 255,
+            "type": "string",
+            "description": "Uses [npm Validator](https://www.npmjs.com/package/validator) isURL."
+          },
           "establishment_opening_date": {
             "type": "string",
             "description": "Uses YYYY-MM-DD [npm Validator](https://www.npmjs.com/package/validator) isISO8601."

@@ -18,6 +18,11 @@ module.exports = {
         Sequelize.STRING
       ),
       queryInterface.addColumn(
+        "establishments",
+        "establishment_web_address",
+        Sequelize.STRING
+      ),
+      queryInterface.addColumn(
         "operators",
         "operator_company_name",
         Sequelize.STRING
@@ -97,6 +102,10 @@ module.exports = {
         "establishment_secondary_number"
       ),
       queryInterface.removeColumn("establishments", "establishment_email"),
+      queryInterface.removeColumn(
+        "establishments",
+        "establishment_web_address"
+      ),
       queryInterface.removeColumn("operators", "operator_company_name"),
       queryInterface.removeColumn("operators", "operator_charity_name"),
       queryInterface.removeColumn("operators", "operator_first_name"),

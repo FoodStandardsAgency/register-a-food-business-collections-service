@@ -42,7 +42,7 @@
   },
   "homepage": "https://github.com/FoodStandardsAgency/register-a-food-business-collections-service#readme",
   "dependencies": {
-    "@slice-and-dice/register-a-food-business-validation": "1.20.1",
+    "@slice-and-dice/register-a-food-business-validation": "1.22.2",
     "applicationinsights": "^1.7.6",
     "applicationinsights-native-metrics": "0.0.5",
     "body-parser": "^1.19.0",
